@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ItemsForm from "./ItemsForm";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import ReactPaginate from "react-paginate";
 
 function ItemsPage() {
@@ -41,11 +41,13 @@ function ItemsPage() {
 
     setItems((prev) => [...prev, ...itemsWithIds]);
     setIsModalOpen(false);
+    toast.success("Items added successfully!");
   };
 
   const handleDelete = (index) => {
     const updatedItems = items.filter((_, i) => i !== index);
     setItems(updatedItems);
+    toast.error("Item deleted successfully!");
   };
 
   return (

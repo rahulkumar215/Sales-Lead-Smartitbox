@@ -6,7 +6,58 @@ import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import AddUserModal from "./AddUserModal";
 
 const UserPage = () => {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([
+    {
+      uid: "user-1",
+      name: "Alice Johnson",
+      mobile: "9876543210",
+      email: "alice.johnson@example.com",
+      designation: "Software Engineer",
+      department: "IT",
+      username: "alice.johnson",
+      password: "Pass@1234",
+    },
+    {
+      uid: "user-2",
+      name: "Bob Smith",
+      mobile: "9123456789",
+      email: "bob.smith@example.com",
+      designation: "Product Manager",
+      department: "Product",
+      username: "bob.smith",
+      password: "Pass@5678",
+    },
+    {
+      uid: "user-3",
+      name: "Charlie Davis",
+      mobile: "9988776655",
+      email: "charlie.davis@example.com",
+      designation: "HR Specialist",
+      department: "Human Resources",
+      username: "charlie.davis",
+      password: "Pass@9012",
+    },
+    {
+      uid: "user-4",
+      name: "Diana Miller",
+      mobile: "8888888888",
+      email: "diana.miller@example.com",
+      designation: "Marketing Lead",
+      department: "Marketing",
+      username: "diana.miller",
+      password: "Pass@3456",
+    },
+    {
+      uid: "user-5",
+      name: "Ethan Brown",
+      mobile: "7777777777",
+      email: "ethan.brown@example.com",
+      designation: "Data Analyst",
+      department: "Analytics",
+      username: "ethan.brown",
+      password: "Pass@7890",
+    },
+  ]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [pageNumber, setPageNumber] = useState(0);
@@ -55,10 +106,11 @@ const UserPage = () => {
     setIsModalOpen(true);
   };
 
-  const filteredUsers = users.filter(
-    (user) =>
-      user.name.toLowerCase().includes(searchQuery) ||
-      user.email.toLowerCase().includes(searchQuery)
+  const filteredUsers = users.filter((user) =>
+    Object.values(user)
+      .join(" ")
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase())
   );
 
   const usersPerPage = 5;
