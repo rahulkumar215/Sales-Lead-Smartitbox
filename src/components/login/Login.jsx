@@ -30,9 +30,6 @@ function Login() {
           <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-800">
             Welcome to Sales CRM
           </h2>
-          <p className="mt-2 text-lg text-gray-600">
-            Manage your sales like never before. Log in to start.
-          </p>
         </div>
 
         <div className="mt-8">

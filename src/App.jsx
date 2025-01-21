@@ -1,8 +1,9 @@
 import "./App.css";
-import Login from "./components/Login";
+// import Login from "./components/login/Login";
+import UserPage from "./components/user/UserPage";
 
 function App() {
-  return <Login />;
+  return <UserPage />;
 }
 
 export default App;
