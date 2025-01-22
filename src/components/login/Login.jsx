@@ -1,8 +1,18 @@
 import { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   function handleUsername(e) {
     setUsername(e.target.value);
@@ -12,20 +22,20 @@ function Login() {
     setPassword(e.target.value);
   }
 
-  function login(e) {
+  const login = (e) => {
     e.preventDefault();
-    console.log(username);
-    console.log(password);
-  }
-
+    if (username && password) {
+      navigate("/home");
+    }
+  };
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 px-6 py-12 sm:mt-0 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md bg-white shadow-lg rounded-xl p-8 md:p-10">
         <div className="text-center">
           <img
             alt="Your Company"
-            src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600"
-            className="mx-auto h-12 w-auto"
+            src="src/assets/img/logo.jpeg"
+            className="mx-auto size-32"
           />
           <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-800">
             Welcome to Sales CRM
@@ -62,20 +72,20 @@ function Login() {
                 >
                   Password
                 </label>
-                <div className="text-sm">
+                {/* <div className="text-sm">
                   <a
                     href="#"
                     className="font-medium text-indigo-600 hover:text-indigo-500"
                   >
                     Forgot password?
                   </a>
-                </div>
+                </div> */}
               </div>
-              <div className="mt-2">
+              <div className="mt-2 relative">
                 <input
                   id="password"
                   name="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={handlePassword}
                   required
@@ -83,6 +93,14 @@ function Login() {
                   className="block w-full rounded-md bg-gray-50 border border-gray-300 px-4 py-2 text-base text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm sm:text-sm"
                   placeholder="Enter your password"
                 />
+                <button
+                  type="button"
+                  onClick={togglePasswordVisibility}
+                  className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700 focus:outline-none"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
               </div>
             </div>
 
@@ -103,7 +121,7 @@ function Login() {
             <a
               href="https://smartitbox.in/"
               target="_blank"
-              className="font-medium text-yellow-400 hover:text-yellow-300"
+              className="font-medium text-yellow-500 hover:text-yellow-400"
             >
               SMARTITBOX
             </a>

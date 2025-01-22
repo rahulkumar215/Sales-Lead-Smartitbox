@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import FileUpload from "./FileUpload";
 import Button from "../universal/Button";
 import { IoMdClose } from "react-icons/io";
+import { FaPlus } from "react-icons/fa";
 
 // eslint-disable-next-line react/prop-types
 function ItemsForm({ onItemsChange, closeModal }) {
@@ -38,7 +39,9 @@ function ItemsForm({ onItemsChange, closeModal }) {
           onSubmit={handleSubmit}
           className="bg-white p-2 rounded-lg w-full mx-auto"
         >
-          <h2 className="text-2xl font-semibold text-indigo-600">Add Items</h2>
+          <h2 className="text-2xl font-semibold text-indigo-600">
+            Create Items
+          </h2>
           <FileUpload onFileData={setItems}>Import Items from excel</FileUpload>
 
           {items.map((item, index) => (
@@ -77,9 +80,13 @@ function ItemsForm({ onItemsChange, closeModal }) {
           ))}
 
           <div className="flex justify-end mt-4 gap-4 items-center sticky bottom-0 bg-white py-2">
-            <Button type="primary" onClick={addItem}>
-              Add Item
-            </Button>
+            <button
+              type="primary"
+              className="px-6 py-3 bg-blue-500 text-white"
+              onClick={addItem}
+            >
+              <FaPlus />
+            </button>
             <Button
               behaviour="submit"
               className="!bg-indigo-600 text-white px-6 py-2 rounded-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-600"

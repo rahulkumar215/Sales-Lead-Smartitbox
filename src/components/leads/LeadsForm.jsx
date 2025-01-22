@@ -1,17 +1,40 @@
 import { useState } from "react";
 import Select from "react-select";
 
-const QuotationForm = ({ onQuotationsSave, closeModal }) => {
+const LeadsForm = ({ onLeadSave, closeModal }) => {
   const [company, setCompany] = useState("");
   const [companyDetails, setCompanyDetails] = useState();
-  const [items, setItems] = useState([{}]);
+  const [items, setItems] = useState([
+    {
+      category: "",
+      name: "",
+      qty: "",
+      price: "",
+      total: "",
+    },
+  ]);
 
-  const companyList = [
-    { name: "NBD", id: 0 },
-    { name: "Company A", id: 1 },
-    { name: "Company B", id: 2 },
-    { name: "Company C", id: 3 },
+  const companyData = [
+    {
+      name: "Company A",
+      id: 1,
+      address: "r z c-56",
+      country: "India",
+      state: "Delhi",
+      city: "New Delhi",
+      leadSource: "LinkedIn",
+      industryType: "manufacturing",
+      contactPerson: "Rahul",
+      number: "9319444628",
+      email: "rk83029014@gmail.com",
+      designation: "MD",
+      designationType: "Director",
+      department: "Account",
+      enquiryType: "HOT",
+    },
   ];
+
+  const companyList = ["NBD", ...companyData.map((company) => company.name)];
 
   const itemCategories = [
     { name: "Electronics", id: 1 },
@@ -26,31 +49,48 @@ const QuotationForm = ({ onQuotationsSave, closeModal }) => {
   };
 
   const options = companyList.map((company) => ({
-    value: company.name,
-    label: company.name,
+    value: company,
+    label: company,
   }));
 
-  // Custom handler for React Select
-  const handleSelectChange = (selectedOption) => {
-    handleInputChange({ target: { value: selectedOption?.value || "" } });
+  const handleInputChange = (field, value) => {
+    // Check if the field is related to company details, if so, update those
+    setCompanyDetails((prevDetails) => ({
+      ...prevDetails,
+      [field]: value, // Dynamically update the specific field
+    }));
   };
 
-  const handleInputChange = (e) => {
-    setCompany(e.target.value);
-    // Fetch company details here based on the selected company (dummy data for now)
-    const selectedCompany = companyList.find(
-      (company) => company.name === e.target.value
+  // Update the `handleSelectChange` to set the company first and then populate its details
+  const handleSelectChange = (selectedOption) => {
+    const selectedCompanyName = selectedOption?.value || "";
+    setCompany(selectedCompanyName);
+
+    // Fetch company details based on the selected company (dummy data for now)
+    const selectedCompany = companyData.find(
+      (company) => company.name === selectedCompanyName
     );
+
     if (selectedCompany) {
+      setCompanyDetails(selectedCompany);
+    } else {
+      // Reset to default if no matching company is found
       setCompanyDetails({
-        name: selectedCompany.name,
-        address: "123 Street, City",
-        country: "Country",
-        state: "State",
-        city: "City",
-        contactPerson: "John Doe",
-        number: "+123456789",
-        email: "johndoe@example.com",
+        name: "",
+        id: Date.now(),
+        address: "",
+        country: "",
+        state: "",
+        city: "",
+        leadSource: "",
+        industryType: "",
+        contactPerson: "",
+        number: "",
+        email: "",
+        designation: "",
+        designationType: "",
+        department: "",
+        enquiryType: "",
       });
     }
   };
@@ -63,20 +103,26 @@ const QuotationForm = ({ onQuotationsSave, closeModal }) => {
         name: "",
         qty: "",
         price: "",
-        total: 0,
+        total: "",
       },
     ]);
   };
 
   const handleItemChange = (index, e) => {
     const { name, value } = e.target;
+    console.log({ name, value });
     const updatedItems = [...items];
     updatedItems[index][name] = value;
     if (name === "qty" || name === "price") {
       updatedItems[index].total =
-        updatedItems[index].qty * updatedItems[index].price;
+        Number(updatedItems[index].qty) * Number(updatedItems[index].price);
     }
     setItems(updatedItems);
+  };
+
+  const handleAddLeads = () => {
+    console.log(companyDetails);
+    console.log(items);
   };
 
   return (
@@ -85,14 +131,14 @@ const QuotationForm = ({ onQuotationsSave, closeModal }) => {
         className="bg-white w-[80vw] rounded-lg max-h-[80vh] overflow-y-auto"
         style={{ scrollbarWidth: "thin" }}
       >
-        <div className="mx-auto p-8 bg-white rounded-lg">
-          <h2 className="text-3xl font-semibold text-gray-600 mb-6">
+        <div className="mx-auto p-5 bg-white rounded-lg">
+          <h2 className="text-3xl font-semibold text-gray-600 mb-4">
             {/* Quotation Entry */}
             New Lead
           </h2>
 
           {/* Company Details */}
-          <div className="mb-6">
+          <div className="pb-6 border-b-2 border-gray-400">
             <label className="block text-gray-600 font-medium mb-2">
               Add NBD/ Select CRR
             </label>
@@ -102,7 +148,7 @@ const QuotationForm = ({ onQuotationsSave, closeModal }) => {
               options={options}
               isClearable
               placeholder="Search and select company..."
-              className="w-full mb-6"
+              className="min-w-[15rem] max-w-fit mb-4"
               classNamePrefix="react-select"
             />
 
@@ -118,7 +164,7 @@ const QuotationForm = ({ onQuotationsSave, closeModal }) => {
                       type="text"
                       value="L-001"
                       disabled
-                      className="w-full p-2 border border-gray-300 rounded-md text-gray-700 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full p-1 border border-gray-300 rounded-md text-gray-700 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                   </div>
                   <div>
@@ -127,29 +173,25 @@ const QuotationForm = ({ onQuotationsSave, closeModal }) => {
                     </label>
                     <input
                       type="text"
-                      value={companyDetails.name === "NBD" ? "NBD" : "CRR"}
+                      value={companyDetails.name === "" ? "NBD" : "CRR"}
                       disabled
-                      className="w-full p-2 border border-gray-300 rounded-md text-gray-700 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full p-1 border border-gray-300 rounded-md text-gray-700 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                   </div>
                 </div>
-                <div className="mt-4 flex gap-4">
-                  {companyDetails.name === "NBD" && (
+                <div className="mt-2 flex gap-4">
+                  {companyDetails.name === "" && (
                     <div>
                       <label className="block text-gray-600 font-medium mb-2">
                         Company Name
                       </label>
                       <input
                         type="text"
-                        value={
-                          companyDetails.name === "NBD"
-                            ? ""
-                            : companyDetails.address
-                        }
+                        defaultValue={companyDetails.name}
                         onChange={(e) =>
                           handleInputChange("companyName", e.target.value)
                         }
-                        className="w-full p-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full p-1 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         placeholder="ABC Corp"
                       />
                     </div>
@@ -161,15 +203,11 @@ const QuotationForm = ({ onQuotationsSave, closeModal }) => {
                     </label>
                     <input
                       type="text"
-                      value={
-                        companyDetails.name === "NBD"
-                          ? ""
-                          : companyDetails.address
-                      }
+                      value={companyDetails.address}
                       onChange={(e) =>
                         handleInputChange("address", e.target.value)
                       }
-                      className="w-full p-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full p-1 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       placeholder="123 Business Ave, Suite 100"
                     />
                   </div>
@@ -179,15 +217,11 @@ const QuotationForm = ({ onQuotationsSave, closeModal }) => {
                     </label>
                     <input
                       type="text"
-                      value={
-                        companyDetails.name === "NBD"
-                          ? ""
-                          : companyDetails.country
-                      }
+                      value={companyDetails.country}
                       onChange={(e) =>
                         handleInputChange("country", e.target.value)
                       }
-                      className="w-full p-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full p-1 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       placeholder="USA"
                     />
                   </div>
@@ -197,15 +231,11 @@ const QuotationForm = ({ onQuotationsSave, closeModal }) => {
                     </label>
                     <input
                       type="text"
-                      value={
-                        companyDetails.name === "NBD"
-                          ? ""
-                          : companyDetails.state
-                      }
+                      value={companyDetails.state}
                       onChange={(e) =>
                         handleInputChange("state", e.target.value)
                       }
-                      className="w-full p-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full p-1 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       placeholder="California"
                     />
                   </div>
@@ -215,18 +245,16 @@ const QuotationForm = ({ onQuotationsSave, closeModal }) => {
                     </label>
                     <input
                       type="text"
-                      value={
-                        companyDetails.name === "NBD" ? "" : companyDetails.city
-                      }
+                      value={companyDetails.city}
                       onChange={(e) =>
                         handleInputChange("city", e.target.value)
                       }
-                      className="w-full p-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full p-1 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       placeholder="San Francisco"
                     />
                   </div>
                 </div>
-                <div className="mt-4">
+                <div className="mt-2">
                   <div className="flex gap-4">
                     <div>
                       <label className="block text-gray-600 font-medium mb-2">
@@ -234,11 +262,11 @@ const QuotationForm = ({ onQuotationsSave, closeModal }) => {
                       </label>
                       <input
                         type="text"
-                        value=""
+                        value={companyDetails.leadSource}
                         onChange={(e) =>
                           handleInputChange("leadSource", e.target.value)
                         }
-                        className="w-full p-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full p-1 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         placeholder="Referral"
                       />
                     </div>
@@ -248,11 +276,11 @@ const QuotationForm = ({ onQuotationsSave, closeModal }) => {
                       </label>
                       <input
                         type="text"
-                        value=""
+                        value={companyDetails.industryType}
                         onChange={(e) =>
                           handleInputChange("industryType", e.target.value)
                         }
-                        className="w-full p-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full p-1 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         placeholder="Software"
                       />
                     </div>
@@ -262,11 +290,11 @@ const QuotationForm = ({ onQuotationsSave, closeModal }) => {
                       </label>
                       <input
                         type="text"
-                        value=""
+                        value={companyDetails.contactPerson}
                         onChange={(e) =>
                           handleInputChange("contactPerson", e.target.value)
                         }
-                        className="w-full p-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full p-1 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         placeholder="John Doe"
                       />
                     </div>
@@ -276,11 +304,11 @@ const QuotationForm = ({ onQuotationsSave, closeModal }) => {
                       </label>
                       <input
                         type="text"
-                        value=""
+                        defaultValue={companyDetails.number}
                         onChange={(e) =>
                           handleInputChange("whatsappNumber", e.target.value)
                         }
-                        className="w-full p-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full p-1 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         placeholder="+1 555-123-4567"
                       />
                     </div>
@@ -290,28 +318,28 @@ const QuotationForm = ({ onQuotationsSave, closeModal }) => {
                       </label>
                       <input
                         type="text"
-                        value=""
+                        value={companyDetails.email}
                         onChange={(e) =>
                           handleInputChange("email", e.target.value)
                         }
-                        className="w-full p-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full p-1 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         placeholder="johndoe@email.com"
                       />
                     </div>
                   </div>
 
-                  <div className="flex gap-4 mt-4">
+                  <div className="flex gap-4 mt-2">
                     <div>
                       <label className="block text-gray-600 font-medium mb-2">
                         Designation
                       </label>
                       <input
                         type="text"
-                        value=""
+                        value={companyDetails.designation}
                         onChange={(e) =>
                           handleInputChange("designation", e.target.value)
                         }
-                        className="w-full p-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full p-1 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         placeholder="Manager"
                       />
                     </div>
@@ -321,11 +349,11 @@ const QuotationForm = ({ onQuotationsSave, closeModal }) => {
                       </label>
                       <input
                         type="text"
-                        value=""
+                        value={companyDetails.designationType}
                         onChange={(e) =>
                           handleInputChange("designationType", e.target.value)
                         }
-                        className="w-full p-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full p-1 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         placeholder="Sales"
                       />
                     </div>
@@ -335,11 +363,11 @@ const QuotationForm = ({ onQuotationsSave, closeModal }) => {
                       </label>
                       <input
                         type="text"
-                        value=""
+                        value={companyDetails.department}
                         onChange={(e) =>
                           handleInputChange("department", e.target.value)
                         }
-                        className="w-full p-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full p-1 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         placeholder="Marketing"
                       />
                     </div>
@@ -349,11 +377,11 @@ const QuotationForm = ({ onQuotationsSave, closeModal }) => {
                       </label>
                       <input
                         type="text"
-                        value=""
+                        value={companyDetails.enquiryType}
                         onChange={(e) =>
                           handleInputChange("enquiryType", e.target.value)
                         }
-                        className="w-full p-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full p-1 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         placeholder="Product Inquiry"
                       />
                     </div>
@@ -364,17 +392,27 @@ const QuotationForm = ({ onQuotationsSave, closeModal }) => {
           </div>
 
           {/* Items List */}
-          <div className="mb-6">
-            <label className="block text-gray-600 font-medium mb-2">
-              Items
-            </label>
+          <div className="mb-6 mt-2">
+            <h3 className="text-xl font-semibold mb-2">Items Description</h3>
+
+            {/* Labels for all inputs */}
+            <div className="flex space-x-4 mb-2 text-gray-500 font-medium">
+              <span className="w-1/4">Category</span>
+              <span className="w-1/4">Item Name</span>
+              <span className="w-1/4">Quantity</span>
+              <span className="w-1/4">Price</span>
+              <span className="w-1/4">Total</span>
+            </div>
+
+            {/* Dynamic Input Rows */}
             {items.map((item, index) => (
               <div key={index} className="flex space-x-4 mb-4">
+                {/* Category Dropdown */}
                 <select
                   name="category"
                   value={item.category}
                   onChange={(e) => handleItemChange(index, e)}
-                  className="w-1/4 p-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-1/4 p-1 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
                   <option value="">Select Category</option>
                   {itemCategories.map((category) => (
@@ -384,11 +422,12 @@ const QuotationForm = ({ onQuotationsSave, closeModal }) => {
                   ))}
                 </select>
 
+                {/* Item Dropdown */}
                 <select
                   name="name"
                   value={item.name}
                   onChange={(e) => handleItemChange(index, e)}
-                  className="w-1/4 p-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-1/4 p-1 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   disabled={!item.category}
                 >
                   <option value="">Select Item</option>
@@ -400,33 +439,38 @@ const QuotationForm = ({ onQuotationsSave, closeModal }) => {
                     ))}
                 </select>
 
+                {/* Quantity Input */}
                 <input
                   type="number"
                   name="qty"
                   value={item.qty}
                   onChange={(e) => handleItemChange(index, e)}
-                  className="w-1/4 p-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-1/4 p-1 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   placeholder="Qty"
                 />
 
+                {/* Price Input */}
                 <input
                   type="number"
                   name="price"
                   value={item.price}
                   onChange={(e) => handleItemChange(index, e)}
-                  className="w-1/4 p-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-1/4 p-1 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   placeholder="Price"
                 />
 
+                {/* Total Display */}
                 <input
                   type="number"
                   value={item.total}
                   readOnly
-                  className="w-1/4 p-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none"
+                  className="w-1/4 p-1 border border-gray-300 rounded-md text-gray-700 focus:outline-none"
                   placeholder="Total"
                 />
               </div>
             ))}
+
+            {/* Add Item Button and Total Summary */}
             <div className="flex justify-between items-center">
               <button
                 onClick={handleAddItem}
@@ -435,7 +479,7 @@ const QuotationForm = ({ onQuotationsSave, closeModal }) => {
                 Add Item
               </button>
 
-              <div className="bg-indigo-600 px-3 py-2 rounded-md">
+              <div className="bg-blue-500 px-3 py-2 rounded-md">
                 <h3 className="font-bold text-base text-white">
                   Total :{" "}
                   <span>
@@ -447,15 +491,18 @@ const QuotationForm = ({ onQuotationsSave, closeModal }) => {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex space-x-4 mt-6">
-            <button className="px-6 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none">
-              Save Quotation
-            </button>
+          <div className="flex justify-end space-x-4 mt-6">
             <button
               onClick={closeModal}
-              className="px-6 py-3 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none"
+              className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none"
             >
               Cancel
+            </button>
+            <button
+              onClick={handleAddLeads}
+              className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none"
+            >
+              Save
             </button>
           </div>
         </div>
@@ -464,4 +511,4 @@ const QuotationForm = ({ onQuotationsSave, closeModal }) => {
   );
 };
 
-export default QuotationForm;
+export default LeadsForm;

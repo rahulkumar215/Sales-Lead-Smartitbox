@@ -96,7 +96,7 @@ const FileUpload = ({ children, onFileData }) => {
       <div className="flex w-full flex-col gap-2 rounded border border-black border-opacity-50 p-4">
         <div className="flex items-center gap-4">
           <label className="cursor-pointer rounded bg-blue-500 px-2 py-1 text-white hover:bg-blue-600">
-            Choose File
+            Upload
             <input
               type="file"
               className="hidden"
@@ -109,7 +109,7 @@ const FileUpload = ({ children, onFileData }) => {
             className="!bg-green-700 hover:!bg-green-800 px-2 py-1 !rounded-sm"
             onClick={handleDownload}
           >
-            Sample Data
+            Format
           </Button>
         </div>
         {error && <p className=" text-sm text-red-500">{error}</p>}

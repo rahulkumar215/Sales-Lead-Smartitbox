@@ -5,7 +5,59 @@ import { ToastContainer, toast } from "react-toastify";
 import ReactPaginate from "react-paginate";
 
 function ItemsPage() {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState([
+    {
+      id: "it-001",
+      category: "na",
+      itemName: "Spinner",
+    },
+    {
+      id: "it-001",
+      category: "na",
+      itemName: "Spinner",
+    },
+    {
+      id: "it-001",
+      category: "na",
+      itemName: "Spinner",
+    },
+    {
+      id: "it-001",
+      category: "na",
+      itemName: "Spinner",
+    },
+    {
+      id: "it-001",
+      category: "na",
+      itemName: "Spinner",
+    },
+    {
+      id: "it-001",
+      category: "na",
+      itemName: "Spinner",
+    },
+    {
+      id: "it-001",
+      category: "na",
+      itemName: "Spinner",
+    },
+    {
+      id: "it-001",
+      category: "na",
+      itemName: "Spinner",
+    },
+    {
+      id: "it-001",
+      category: "na",
+      itemName: "Spinner",
+    },
+    {
+      id: "it-001",
+      category: "na",
+      itemName: "Spinner",
+    },
+  ]);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -159,8 +211,9 @@ function ItemsPage() {
 
       {/* Pagination (Optional if needed) */}
       {/* Pagination */}
+
       <div className="flex justify-between items-center mt-6">
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-gray-800 font-semibold">
           {filteredItems.length} entries found
         </p>
         <ReactPaginate
@@ -168,11 +221,21 @@ function ItemsPage() {
           pageRangeDisplayed={3}
           marginPagesDisplayed={1}
           onPageChange={handlePageChange}
-          containerClassName="flex space-x-2"
-          previousLabel="Prev"
-          nextLabel="Next"
-          activeClassName="bg-indigo-600 text-white px-2 rounded-md"
+          containerClassName="flex items-center space-x-2"
+          previousLabel={
+            <span className=" bg-gray-200 text-gray-600 px-2 py-1 rounded-sm hover:bg-gray-300 transition-all">
+              Prev
+            </span>
+          }
+          nextLabel={
+            <span className=" bg-gray-200 text-gray-600 px-2 py-1 rounded-sm hover:bg-gray-300 transition-all">
+              Next
+            </span>
+          }
+          activeClassName="bg-indigo-600 text-white font-semibold px-2 rounded-sm transition-all"
           disabledClassName="text-gray-400 cursor-not-allowed"
+          pageClassName="px-2 rounded-sm  text-gray-600 hover:bg-indigo-100 hover:text-indigo-600 cursor-pointer transition-all"
+          breakClassName="text-gray-600"
         />
       </div>
     </div>

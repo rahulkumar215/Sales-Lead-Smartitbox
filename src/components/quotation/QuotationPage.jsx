@@ -864,7 +864,7 @@ function QuotationPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-indigo-200 via-purple-200 to-indigo-300 p-6">
+    <div className="min-h-screen bg-gradient-to-r from-indigo-200 via-purple-200 to-indigo-300 p-3">
       <ToastContainer />
 
       {isModalOpen && (
@@ -874,7 +874,7 @@ function QuotationPage() {
         />
       )}
 
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-3">
         <input
           type="text"
           placeholder="Search quotations..."
@@ -996,7 +996,7 @@ function QuotationPage() {
       </div>
 
       <div className="flex justify-between items-center mt-6">
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-gray-800 font-semibold">
           {filteredQuotations.length} entries found
         </p>
         <ReactPaginate
@@ -1004,11 +1004,21 @@ function QuotationPage() {
           pageRangeDisplayed={3}
           marginPagesDisplayed={1}
           onPageChange={handlePageChange}
-          containerClassName="flex space-x-2"
-          previousLabel="Prev"
-          nextLabel="Next"
-          activeClassName="bg-indigo-600 text-white px-2 rounded-md"
+          containerClassName="flex items-center space-x-2"
+          previousLabel={
+            <span className=" bg-gray-200 text-gray-600 px-2 py-1 rounded-sm hover:bg-gray-300 transition-all">
+              Prev
+            </span>
+          }
+          nextLabel={
+            <span className=" bg-gray-200 text-gray-600 px-2 py-1 rounded-sm hover:bg-gray-300 transition-all">
+              Next
+            </span>
+          }
+          activeClassName="bg-indigo-600 text-white font-semibold px-2 rounded-sm transition-all"
           disabledClassName="text-gray-400 cursor-not-allowed"
+          pageClassName="px-2 rounded-sm  text-gray-600 hover:bg-indigo-100 hover:text-indigo-600 cursor-pointer transition-all"
+          breakClassName="text-gray-600"
         />
       </div>
     </div>
