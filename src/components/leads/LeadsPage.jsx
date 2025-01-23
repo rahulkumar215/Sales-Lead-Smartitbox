@@ -1,15 +1,23 @@
 import { useState } from "react";
-import { FaEdit, FaPlus, FaTrashAlt } from "react-icons/fa";
+import {
+  FaEdit,
+  FaMapMarkerAlt,
+  FaPhoneAlt,
+  FaPlus,
+  FaTrashAlt,
+} from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import ReactPaginate from "react-paginate";
 import LeadsForm from "./LeadsForm";
+import PopOver from "./PopOver";
+import { IoMail } from "react-icons/io5";
 
 function LeadsPage() {
   const [leads, setLeads] = useState([
     {
       id: "LD-001",
       timestamp: "2025-01-22 10:00 AM",
-      leadType: "New",
+      leadType: "NBD",
       companyName: "ABC Corp",
       address: "123, Street Name, City",
       country: "Country 1",
@@ -36,7 +44,7 @@ function LeadsPage() {
     {
       id: "LD-002",
       timestamp: "2025-01-22 11:00 AM",
-      leadType: "Follow-up",
+      leadType: "CRR",
       companyName: "XYZ Ltd",
       address: "456, Avenue Name, City",
       country: "Country 2",
@@ -63,7 +71,7 @@ function LeadsPage() {
     {
       id: "LD-003",
       timestamp: "2025-01-22 12:00 PM",
-      leadType: "Cold",
+      leadType: "CRR",
       companyName: "LMN Inc.",
       address: "789, Road Name, City",
       country: "Country 3",
@@ -157,13 +165,13 @@ function LeadsPage() {
         <table className="min-w-full table-auto overflow-x-auto">
           <thead
             className="bg-gray-100 text-gray-600"
-            style={{ fontFamily: "Open Sans, serif", fontSize: "9px" }}
+            style={{ fontFamily: "Open Sans, serif", fontSize: "13px" }}
           >
             <tr>
               <th className="px-6 py-3 text-left font-medium text-sm">
                 Actions
               </th>
-              <th className="px-12 py-3 text-left font-medium text-sm">
+              <th className="px-9 py-3 text-left font-medium text-sm">
                 Timestamp
               </th>
               <th className="px-6 py-3 text-left font-medium text-sm">
@@ -175,7 +183,7 @@ function LeadsPage() {
               <th className="px-6 py-3 text-left font-medium text-sm">
                 Company Name
               </th>
-              <th className="px-6 py-3 text-left font-medium text-sm">
+              <th className="px-2 py-3 text-left font-medium text-sm">
                 Address
               </th>
               <th className="px-6 py-3 text-left font-medium text-sm">
@@ -192,14 +200,14 @@ function LeadsPage() {
               <th className="px-6 py-3 text-left font-medium text-sm">
                 Contact Person
               </th>
-              <th className="px-6 py-3 text-left font-medium text-sm">
+              <th className="px-2 py-3 text-left font-medium text-sm">
                 Number
               </th>
-              <th className="px-6 py-3 text-left font-medium text-sm">
+              <th className="px-2 py-3 text-left font-medium text-sm">
                 Email ID
               </th>
               <th className="px-6 py-3 text-left font-medium text-sm">
-                Designation
+                Desigsnation
               </th>
               <th className="px-6 py-3 text-left font-medium text-sm">
                 Designation Type
@@ -210,9 +218,9 @@ function LeadsPage() {
               <th className="px-6 py-3 text-left font-medium text-sm">
                 Enquiry Type
               </th>
-              <th className="px-6 py-3 text-left font-medium text-sm">
+              {/* <th className="px-6 py-3 text-left font-medium text-sm">
                 Action Taken
-              </th>
+              </th> */}
               <th className="px-6 py-3 text-left font-medium text-sm">
                 Lead Assigned to
               </th>
@@ -249,7 +257,7 @@ function LeadsPage() {
                   key={index}
                   className="hover:bg-gray-50 border border-t-gray-300"
                 >
-                  <td className=" text-sm text-center">
+                  <td className="  text-center">
                     <button
                       onClick={() =>
                         alert("Edit functionality not implemented yet")
@@ -265,30 +273,42 @@ function LeadsPage() {
                       <FaTrashAlt size={20} />
                     </button>
                   </td>
-                  <td className=" text-sm">{lead.timestamp}</td>
-                  <td className="text-red-800 font-bold  text-sm">{lead.id}</td>
-                  <td className=" text-sm">{lead.leadType}</td>
-                  <td className=" text-sm">{lead.companyName}</td>
-                  <td className=" text-sm">{lead.address}</td>
-                  <td className=" text-sm">{lead.country}</td>
-                  <td className=" text-sm">{lead.state}</td>
-                  <td className=" text-sm">{lead.city}</td>
-                  <td className=" text-sm">{lead.leadSource}</td>
-                  <td className=" text-sm">{lead.industryType}</td>
-                  <td className=" text-sm">{lead.contactPerson}</td>
-                  <td className=" text-sm">{lead.number}</td>
-                  <td className=" text-sm">{lead.emailId}</td>
-                  <td className=" text-sm">{lead.designation}</td>
-                  <td className=" text-sm">{lead.designationType}</td>
-                  <td className=" text-sm">{lead.department}</td>
-                  <td className=" text-sm">{lead.enquiryType}</td>
-                  <td className=" text-sm">{lead.actionTaken}</td>
-                  <td className=" text-sm">{lead.leadAssignedTo}</td>
-                  <td className=" text-sm">{lead.remarks}</td>
-                  <td className=" text-sm">{lead.furtherAction}</td>
-                  <td className=" text-sm">{lead.followupDate}</td>
-                  <td className=" text-sm">{lead.leadPunchedBy}</td>
-                  <td className=" text-sm">{lead.status}</td>
+                  <td>{lead.timestamp}</td>
+                  <td className="text-red-800 font-bold  ">{lead.id}</td>
+                  <td
+                    className={`${
+                      lead.leadType === "NBD" ? "bg-red-200" : "bg-green-200"
+                    }`}
+                  >
+                    {lead.leadType}
+                  </td>
+                  <td>{lead.companyName}</td>
+                  <PopOver value={lead.address}>
+                    <FaMapMarkerAlt size={20} className="text-blue-700" />
+                  </PopOver>
+                  <td>{lead.country}</td>
+                  <td>{lead.state}</td>
+                  <td>{lead.city}</td>
+                  <td>{lead.leadSource}</td>
+                  <td>{lead.industryType}</td>
+                  <td>{lead.contactPerson}</td>
+                  <PopOver value={lead.number}>
+                    <FaPhoneAlt size={20} className="text-green-700" />
+                  </PopOver>
+                  <PopOver value={lead.emailId}>
+                    <IoMail size={20} className="text-red-700" />
+                  </PopOver>
+                  <td>{lead.designation}</td>
+                  <td>{lead.designationType}</td>
+                  <td>{lead.department}</td>
+                  <td>{lead.enquiryType}</td>
+                  {/* <td>{lead.actionTaken}</td> */}
+                  <td>{lead.leadAssignedTo}</td>
+                  <td>{lead.remarks}</td>
+                  <td>{lead.furtherAction}</td>
+                  <td>{lead.followupDate}</td>
+                  <td>{lead.leadPunchedBy}</td>
+                  <td>{lead.status}</td>
                 </tr>
               ))
             )}

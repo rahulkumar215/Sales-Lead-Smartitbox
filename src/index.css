@@ -1,3 +1,28 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+table,
+td,
+th,
+tr {
+  font-size: 0.812rem !important;
+}
+
+td {
+  padding-left: 5px;
+}
+
+th {
+  border-bottom: 1px solid #d1d5db;
+  font-weight: bold !important;
+}
+
+td:not(:last-child) {
+  border-right: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+th:not(:last-child) {
+  border-right: 1px solid #d1d5db;
+}

@@ -891,7 +891,7 @@ function QuotationPage() {
         <table className="min-w-full table-auto">
           <thead className="bg-gray-100 text-gray-600">
             <tr>
-              <th className="px-6 py-3 text-left font-medium text-sm">
+              <th className="px-12 py-3 text-left font-medium text-sm">
                 Timestamp
               </th>
               <th className="px-6 py-3 text-left font-medium text-sm">
