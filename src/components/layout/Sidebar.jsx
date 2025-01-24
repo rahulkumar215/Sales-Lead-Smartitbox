@@ -24,7 +24,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
   return (
     <aside
-      className={`bg-blue-800 text-white fixed top-0 left-0 z-50 transition-transform duration-300 ease-in-out ${
+      className={`bg-white text-black fixed top-0 left-0 z-50 transition-transform duration-300 ease-in-out ${
         isOpen ? "transform-none" : "-translate-x-full"
       } w-[14rem] h-full md:h-screen overflow-y-auto`}
     >
@@ -34,7 +34,11 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             isOpen ? "block" : "hidden"
           }`}
         >
-          SMART ITBOX
+          <img
+            src="src/assets/img/logo-tp.png"
+            alt=""
+            className="bg-transparent"
+          />
         </div>
         <button className="md:hidden text-white" onClick={toggleSidebar}>
           Close
@@ -44,7 +48,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       <ul className="space-y-4 p-4">
         {/* Dashboard */}
         <li
-          className="flex items-center space-x-4 hover:cursor-pointer hover:bg-gray-700 p-2 rounded-md"
+          className="flex items-center space-x-4 hover:cursor-pointer hover:bg-yellow-300 p-2 rounded-md"
           onClick={() => navigate("/home")}
         >
           <FaHome className={`text-xl ${isOpen ? "block" : "hidden"}`} />
@@ -52,7 +56,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         </li>
 
         <li
-          className="flex items-center space-x-4 hover:cursor-pointer hover:bg-gray-700 p-2 rounded-md"
+          className="flex items-center space-x-4 hover:cursor-pointer hover:bg-yellow-300 p-2 rounded-md"
           onClick={() => navigate("/leads")}
         >
           <MdLeaderboard className={`text-xl ${isOpen ? "block" : "hidden"}`} />
@@ -61,7 +65,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
         {/* User Access */}
         <li
-          className="flex items-center space-x-4 hover:cursor-pointer hover:bg-gray-700 p-2 rounded-md"
+          className="flex items-center space-x-4 hover:cursor-pointer hover:bg-yellow-300 p-2 rounded-md"
           onClick={() => navigate("/users")}
         >
           <FaUsers className={`text-xl ${isOpen ? "block" : "hidden"}`} />
@@ -70,7 +74,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
         {/* Item Master */}
         <li
-          className="flex items-center space-x-4 hover:cursor-pointer hover:bg-gray-700 p-2 rounded-md"
+          className="flex items-center space-x-4 hover:cursor-pointer hover:bg-yellow-300 p-2 rounded-md"
           onClick={() => navigate("/items")}
         >
           <FaBox className={`text-xl ${isOpen ? "block" : "hidden"}`} />
@@ -79,7 +83,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
         {/* Quotations */}
         <li
-          className="flex items-center space-x-4 hover:cursor-pointer hover:bg-gray-700 p-2 rounded-md"
+          className="flex items-center space-x-4 hover:cursor-pointer hover:bg-yellow-300 p-2 rounded-md"
           onClick={() => navigate("/home")}
         >
           <FaClipboard className={`text-xl ${isOpen ? "block" : "hidden"}`} />
@@ -88,7 +92,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
         {/* Customers */}
         <li
-          className="flex items-center space-x-4 hover:cursor-pointer hover:bg-gray-700 p-2 rounded-md"
+          className="flex items-center space-x-4 hover:cursor-pointer hover:bg-yellow-300 p-2 rounded-md"
           onClick={() => navigate("/company")}
         >
           <FaUsers className={`text-xl ${isOpen ? "block" : "hidden"}`} />
@@ -97,7 +101,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
         {/* Reports */}
         <li
-          className="flex items-center space-x-4 hover:cursor-pointer hover:bg-gray-700 p-2 rounded-md"
+          className="flex items-center space-x-4 hover:cursor-pointer hover:bg-yellow-300 p-2 rounded-md"
           onClick={() => navigate("/home")}
         >
           <FaFileAlt className={`text-xl ${isOpen ? "block" : "hidden"}`} />
@@ -106,7 +110,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
         {/* Logout */}
         <li
-          className="flex items-center space-x-4 hover:cursor-pointer hover:bg-gray-700 p-2 rounded-md cursor-pointer"
+          className="flex items-center space-x-4 hover:cursor-pointer hover:bg-red-500 p-2 rounded-md cursor-pointer"
           onClick={handleLogout}
         >
           <FaSignOutAlt className={`text-xl ${isOpen ? "block" : "hidden"}`} />

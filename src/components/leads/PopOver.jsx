@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function PopOver({ value, children }) {
+function PopOver({ value, children, link }) {
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
@@ -9,7 +9,9 @@ function PopOver({ value, children }) {
       onMouseLeave={() => setShowTooltip(false)} // Hide tooltip on mouse leave
       style={{ position: "relative", cursor: "pointer" }}
     >
-      {children}
+      <a href={link} target="_blank" rel="noopener noreferrer">
+        {children}
+      </a>
       {showTooltip && (
         <div
           style={{

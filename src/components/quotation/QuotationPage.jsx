@@ -864,7 +864,7 @@ function QuotationPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-indigo-200 via-purple-200 to-indigo-300 p-3">
+    <div className="min-h-screen bg-white p-3">
       <ToastContainer />
 
       {isModalOpen && (
@@ -880,7 +880,7 @@ function QuotationPage() {
           placeholder="Search quotations..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="p-3 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-indigo-600"
+          className="p-1 border border-gray-300 bg-gray-100 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-indigo-600 placeholder:text-black"
         />
       </div>
 
@@ -889,42 +889,30 @@ function QuotationPage() {
         style={{ scrollbarWidth: "thin" }}
       >
         <table className="min-w-full table-auto">
-          <thead className="bg-gray-100 text-gray-600">
+          <thead className="bg-blue-900 text-white">
             <tr>
-              <th className="px-12 py-3 text-left font-medium text-sm">
-                Timestamp
-              </th>
-              <th className="px-6 py-3 text-left font-medium text-sm">
-                Lead ID
-              </th>
-              <th className="px-6 py-3 text-left font-medium text-sm">
-                Source
-              </th>
-              <th className="px-6 py-3 text-left font-medium text-sm">
+              <th className="px-12 text-left font-medium text-sm">Timestamp</th>
+              <th className=" text-center font-medium text-sm">Lead ID</th>
+              <th className="px-3 text-left font-medium text-sm">Source</th>
+              <th className="px-6 text-center font-medium text-sm">
                 Quotation No.
               </th>
-              <th className="px-6 py-3 text-left font-medium text-sm">
+              <th className="px-3 text-left font-medium text-sm">
                 Client Name
               </th>
-              <th className="px-6 py-3 text-left font-medium text-sm">
+              <th className="px-3 text-left font-medium text-sm">
                 Contact Person
               </th>
-              <th className="px-6 py-3 text-left font-medium text-sm">Email</th>
-              <th className="px-6 py-3 text-left font-medium text-sm">
+              <th className="px-3 text-left font-medium text-sm">Email</th>
+              <th className="px-3 text-left font-medium text-sm">
                 Assigned to
               </th>
-              <th className="px-6 py-3 text-left font-medium text-sm">
-                Created by
-              </th>
-              <th className="px-6 py-3 text-left font-medium text-sm">
+              <th className="px-3 text-left font-medium text-sm">Created by</th>
+              <th className="px-3 text-left font-medium text-sm">
                 Quotation Amount
               </th>
-              <th className="px-6 py-3 text-left font-medium text-sm">
-                PDF URL
-              </th>
-              <th className="px-6 py-3 text-left font-medium text-sm">
-                Actions
-              </th>
+              <th className="px-3 text-left font-medium text-sm">PDF URL</th>
+              <th className="px-3 text-left font-medium text-sm">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -943,7 +931,7 @@ function QuotationPage() {
                   key={index}
                   className="hover:bg-gray-50 border border-t-gray-300"
                 >
-                  <td className="px-3 py-2 text-sm">
+                  <td className="px-2 py-1 text-sm">
                     {new Date().toLocaleString("en-GB", {
                       day: "2-digit",
                       month: "short",
@@ -953,18 +941,18 @@ function QuotationPage() {
                       hour12: true,
                     })}
                   </td>
-                  <td className="px-3 py-2 text-sm">{quotation.leadId}</td>
-                  <td className="px-3 py-2 text-sm">{quotation.leadSource}</td>
-                  <td className="px-3 py-2 text-sm">{quotation.quotationNo}</td>
-                  <td className="px-3 py-2 text-sm">{quotation.clientName}</td>
-                  <td className="px-3 py-2 text-sm">
+                  <td className="px-2 py-1 text-sm">{quotation.leadId}</td>
+                  <td className="px-2 py-1 text-sm">{quotation.leadSource}</td>
+                  <td className="px-2 py-1 text-sm">{quotation.quotationNo}</td>
+                  <td className="px-2 py-1 text-sm">{quotation.clientName}</td>
+                  <td className="px-2 py-1 text-sm">
                     {quotation.contactPerson}
                   </td>
-                  <td className="px-3 py-2 text-sm">{quotation.email}</td>
-                  <td className="px-3 py-2 text-sm">{quotation.assignedTo}</td>
-                  <td className="px-3 py-2 text-sm">{quotation.createdBy}</td>
-                  <td className="px-3 py-2 text-sm">{quotation.amount}</td>
-                  <td className="px-3 py-2 text-sm">
+                  <td className="px-2 py-1 text-sm">{quotation.email}</td>
+                  <td className="px-2 py-1 text-sm">{quotation.assignedTo}</td>
+                  <td className="px-2 py-1 text-sm">{quotation.createdBy}</td>
+                  <td className="px-2 py-1 text-sm">{quotation.amount}</td>
+                  <td className="px-2 py-1 text-sm">
                     <a
                       href={quotation.pdfUrl}
                       target="_blank"
@@ -974,7 +962,7 @@ function QuotationPage() {
                       <FaFilePdf size={20} />
                     </a>
                   </td>
-                  <td className="px-3 py-2 text-center text-sm">
+                  <td className="px-2 py-1 text-center text-sm">
                     <button
                       onClick={handleEditQuotations}
                       className="text-indigo-600 mr-2 hover:text-indigo-800"

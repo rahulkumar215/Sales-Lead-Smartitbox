@@ -58,9 +58,12 @@ export const generatePDF = (
     doc.setFont("helvetica", "bold");
     doc.text(companyAddress, 14, fromTitleY + 7);
     doc.setFont("helvetica", "normal");
-    doc.text(companyAddress1, 14, fromTitleY + 14);
-    doc.text(companyAddress2, 14, fromTitleY + 21);
-    doc.text(companyAddress3, 14, fromTitleY + 28);
+    doc.setFontSize(10);
+    doc.text(companyAddress1, 14, fromTitleY + 12);
+    doc.text(companyAddress2, 14, fromTitleY + 16);
+    doc.text(companyAddress3, 14, fromTitleY + 20);
+    doc.setFontSize(11);
+    doc.text("GSTIN : ABCD415236541", 14, fromTitleY + 25);
 
     // Add "To:" section on the right side (half the width of the page)
     const toTitleY = 45; // Same Y position as "From"
@@ -75,16 +78,17 @@ export const generatePDF = (
     doc.setFont("helvetica", "bold");
     doc.text(` ${customerDetails.name}`, 105, customerDetailsY);
     doc.setFont("helvetica", "normal");
-    doc.text(` ${customerDetails.address}`, 105, customerDetailsY + 7);
+    doc.setFontSize(10);
+    doc.text(` ${customerDetails.address}`, 105, customerDetailsY + 5);
     doc.text(
       ` ${customerDetails.country}, ${customerDetails.state}, ${customerDetails.city}`,
       105,
-      customerDetailsY + 14
+      customerDetailsY + 9
     );
     doc.text(
       ` ${customerDetails.contactPerson}, ${customerDetails.number}, ${customerDetails.email}`,
       105,
-      customerDetailsY + 21
+      customerDetailsY + 13
     );
 
     // Divider between item details and total

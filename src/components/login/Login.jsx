@@ -35,7 +35,7 @@ function Login() {
           <img
             alt="Your Company"
             src="src/assets/img/logo.jpeg"
-            className="mx-auto size-32"
+            className="mx-auto h-24"
           />
           <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-800">
             Welcome to Sales CRM
@@ -123,7 +123,7 @@ function Login() {
               target="_blank"
               className="font-medium text-yellow-500 hover:text-yellow-400"
             >
-              SMARTITBOX
+              SMART ITBOX
             </a>
           </p>
         </div>

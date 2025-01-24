@@ -56,19 +56,23 @@ const Navbar = ({ toggleSidebar }) => {
 
   return (
     <div>
-      <nav className="flex items-center justify-between p-2 bg-gray-400 text-white shadow-lg">
+      <nav className="flex items-center justify-between p-2 bg-red-700 text-white shadow-lg">
         {/* Left Section: Hamburger Menu for Sidebar */}
         <button
-          className="p-2 rounded-md text-white hover:bg-indigo-700 transition-colors duration-300"
+          className="p-2 rounded-md text-white hover:bg-yellow-500 transition-colors duration-300"
           onClick={toggleSidebar}
         >
           <FaBars className="text-2xl" />
         </button>
 
         {/* Center Section: App Title or Logo */}
-        <div className="text-2xl font-bold tracking-wide text-white">
-          <span className="text-indigo-100">SMART </span>
-          <span className="text-pink-100">ITBOX</span>
+        <div className="text-2xl font-bold tracking-wide text-center flex flex-col sm:flex-row">
+          <span className=" text-white-600 text-[1.2rem] sm:text-2xl">
+            LEADS&nbsp;
+          </span>
+          <span className=" text-white-600 text-[1.2rem] sm:text-2xl">
+            MANAGEMENT SYSTEM
+          </span>
         </div>
 
         {/* Right Section: Profile Section with Hover Effects */}

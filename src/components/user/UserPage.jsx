@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import ReactPaginate from "react-paginate";
 import "react-toastify/dist/ReactToastify.css";
-import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import { FaEdit, FaPlus, FaTrashAlt } from "react-icons/fa";
 import AddUserModal from "./AddUserModal";
 
 const UserPage = () => {
@@ -125,7 +125,7 @@ const UserPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-indigo-200 via-purple-200 to-indigo-300 p-6">
+    <div className="min-h-screen bg-white p-3">
       <ToastContainer />
 
       {/* Add User Modal */}
@@ -140,17 +140,18 @@ const UserPage = () => {
       )}
 
       {/* Header Section */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-3">
         <input
           type="text"
-          placeholder="Search users"
+          placeholder="Search by anything..."
           onChange={handleSearch}
-          className="p-3 border border-gray-300 rounded-md w-1/3 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+          className="p-1 border border-gray-300 bg-gray-100 rounded-md w-1/3 focus:outline-none focus:ring-2 focus:ring-indigo-600 placeholder:text-black"
         />
         <button
-          className="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-200"
+          className="px-6 py-2 flex items-center gap-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-200"
           onClick={() => setIsModalOpen(true)}
         >
+          <FaPlus />
           Add User
         </button>
       </div>
@@ -160,9 +161,9 @@ const UserPage = () => {
         className="overflow-x-auto bg-white shadow-lg rounded-lg"
         style={{ scrollbarWidth: "thin" }}
       >
-        <table className="min-w-full table-auto">
+        <table className="min-w-full table-auto overflow-x-auto">
           <thead className="bg-gray-100 text-gray-600">
-            <tr>
+            <tr className="bg-blue-900 text-white">
               {[
                 "UID",
                 "Name",
@@ -191,7 +192,10 @@ const UserPage = () => {
               </tr>
             ) : (
               displayUsers.map((user) => (
-                <tr key={user.uid} className="hover:bg-gray-50">
+                <tr
+                  key={user.uid}
+                  className="hover:bg-gray-50 border border-t-gray-300  "
+                >
                   {[
                     "uid",
                     "name",
@@ -201,11 +205,11 @@ const UserPage = () => {
                     "department",
                     "username",
                   ].map((field) => (
-                    <td key={field} className="px-6 py-4 text-sm">
+                    <td key={field} className="px-3 py-2 text-sm">
                       {user[field]}
                     </td>
                   ))}
-                  <td className="px-6 py-4 flex gap-4">
+                  <td className="px-3 py-2 flex gap-2 items-center justify-center">
                     <button
                       onClick={() => handleEditUser(user.uid)}
                       className="text-indigo-600 hover:text-indigo-800"

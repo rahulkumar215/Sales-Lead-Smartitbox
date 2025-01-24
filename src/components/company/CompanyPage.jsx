@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import ReactPaginate from "react-paginate";
 import "react-toastify/dist/ReactToastify.css";
-import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import { FaEdit, FaPlus, FaTrashAlt } from "react-icons/fa";
 import CompanyForm from "./CompanyForm";
 
 const CompanyPage = () => {
@@ -86,7 +86,7 @@ const CompanyPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-indigo-200 via-purple-200 to-indigo-300 p-6">
+    <div className="min-h-screen bg-white p-6">
       <ToastContainer />
 
       {/* Header Section */}
@@ -95,12 +95,13 @@ const CompanyPage = () => {
           type="text"
           placeholder="Search companies"
           onChange={handleSearch}
-          className="p-3 border border-gray-300 rounded-md w-1/3 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+          className="p-1 border border-gray-300 bg-gray-100 rounded-md w-1/3 focus:outline-none focus:ring-2 focus:ring-indigo-600 placeholder:text-black"
         />
         <button
-          className="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-200"
+          className="px-6 py-2 flex items-center gap-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-200"
           onClick={() => setIsModalOpen(true)}
         >
+          <FaPlus />
           Add Company
         </button>
       </div>
@@ -114,7 +115,7 @@ const CompanyPage = () => {
         style={{ scrollbarWidth: "thin" }}
       >
         <table className="min-w-full table-auto">
-          <thead className="bg-gray-100 text-gray-600">
+          <thead className="bg-blue-900 text-white">
             <tr>
               {[
                 "Company Name",
@@ -131,10 +132,7 @@ const CompanyPage = () => {
                 "Department",
                 "Actions",
               ].map((header) => (
-                <th
-                  key={header}
-                  className="px-6 py-3 text-left font-medium text-sm"
-                >
+                <th key={header} className="px-6 text-left font-medium text-sm">
                   {header}
                 </th>
               ))}
@@ -168,11 +166,11 @@ const CompanyPage = () => {
                     "designationType",
                     "department",
                   ].map((field) => (
-                    <td key={field} className="px-6 py-4 text-sm">
+                    <td key={field} className="px-3 py-2 text-sm">
                       {company[field]}
                     </td>
                   ))}
-                  <td className="px-6 py-4 flex gap-4">
+                  <td className="px-3 py-2 flex gap-4">
                     <button
                       onClick={() => handleEditCompany(company.uid)}
                       className="text-indigo-600 hover:text-indigo-800"
