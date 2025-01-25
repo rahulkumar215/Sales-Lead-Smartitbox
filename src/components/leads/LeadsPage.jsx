@@ -1,11 +1,5 @@
 import React, { useRef, useState } from "react";
-import {
-  FaEdit,
-  FaMapMarkerAlt,
-  FaPhoneAlt,
-  FaPlus,
-  FaTrashAlt,
-} from "react-icons/fa";
+import { FaEdit, FaPhoneAlt, FaPlus, FaTrashAlt } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import ReactPaginate from "react-paginate";
 import LeadsForm from "./LeadsForm";
@@ -467,7 +461,9 @@ function LeadsPage() {
               <th className="px-6 text-left font-medium text-sm">
                 Designation
               </th>
-              <th className="px-6 text-left font-medium text-sm">Type</th>
+              <th className="px-6 text-left font-medium text-sm">
+                Enquriy Type
+              </th>
               <th className="px-6 text-left font-medium text-sm">
                 Assigned to
               </th>
@@ -524,14 +520,16 @@ function LeadsPage() {
                     <td className="text-red-800 font-bold">
                       {lead.leadDetails.leadId}
                     </td>
-                    <td
-                      className={`${
-                        lead.leadDetails.leadType === "NBD"
-                          ? "bg-red-200"
-                          : "bg-green-200"
-                      }`}
-                    >
-                      {lead.leadDetails.leadType}
+                    <td>
+                      <span
+                        className={`px-2 py-1 rounded-md ${
+                          lead.leadDetails.leadType === "NBD"
+                            ? "bg-red-200 border border-red-400"
+                            : "bg-green-200 border border-green-400"
+                        }`}
+                      >
+                        {lead.leadDetails.leadType}
+                      </span>
                     </td>
                     <td>{lead.leadDetails.name}</td>
                     <td>{lead.leadDetails.leadSource}</td>
@@ -549,19 +547,21 @@ function LeadsPage() {
                       <IoMail size={20} className="text-red-700" />
                     </PopOver>
                     <td>{lead.leadDetails.designation}</td>
-                    <td
-                      className={`${
-                        lead.leadDetails.enquiryType === "Hot" &&
-                        "bg-red-400 hover:bg-red-500"
-                      } ${
-                        lead.leadDetails.enquiryType === "Cold" &&
-                        " bg-blue-400 hover:bg-blue-500"
-                      } ${
-                        lead.leadDetails.enquiryType === "Warm" &&
-                        "bg-yellow-400 hover:bg-yellow-500"
-                      }`}
-                    >
-                      {lead.leadDetails.enquiryType}
+                    <td>
+                      <span
+                        className={`px-2 py-1 rounded-md ${
+                          lead.leadDetails.enquiryType === "Hot" &&
+                          "bg-red-200 border border-red-400"
+                        } ${
+                          lead.leadDetails.enquiryType === "Cold" &&
+                          " bg-blue-200 border border-blue-400"
+                        } ${
+                          lead.leadDetails.enquiryType === "Warm" &&
+                          "bg-yellow-200  border border-yellow-400"
+                        }`}
+                      >
+                        {lead.leadDetails.enquiryType}
+                      </span>
                     </td>
                     <td>{lead.leadDetails.assignedTo}</td>
                     <td>{lead.leadDetails.remarks}</td>
