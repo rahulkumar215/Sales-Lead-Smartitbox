@@ -2,15 +2,28 @@ import { useEffect, useState } from "react";
 import Select from "react-select";
 import { fetchCities, fetchCountries, fetchStates } from "../api/Index";
 import { generatePDF } from "./pdf";
-import { FaTrash, FaTrashAlt } from "react-icons/fa";
+import { FaTrashAlt } from "react-icons/fa";
 import ShortUniqueId from "short-unique-id";
+
+const userInfo = {
+  uid: "UID-Infini8",
+  name: "Rahul",
+  mobile: "9319444628",
+  email: "rk83029014@gmail.com",
+  designation: "sales",
+  department: "executive",
+  username: "Infini8",
+  password: "415263",
+};
 
 const LeadsForm = ({ leadId, onLeadSave, closeModal, data = "" }) => {
   const [company, setCompany] = useState(data ? data.leadDetails.name : "");
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
-  const [leadType, setLeadType] = useState("");
+  const [leadType, setLeadType] = useState(
+    data ? data.leadDetails.leadType : ""
+  );
   const [companyDetails, setCompanyDetails] = useState(
     data ? data.leadDetails : ""
   );
@@ -215,6 +228,7 @@ const LeadsForm = ({ leadId, onLeadSave, closeModal, data = "" }) => {
     companyDetails["leadType"] = leadType;
     companyDetails["puchedBy"] = "Kashif";
     companyDetails["status"] = "Pending";
+    companyDetails["leadId"] = leadId;
 
     onLeadSave(companyDetails, items);
     generatePDF(companyDetails, items);
@@ -348,6 +362,7 @@ const LeadsForm = ({ leadId, onLeadSave, closeModal, data = "" }) => {
                   </label>
                   <select
                     value={companyDetails.stateCode}
+                    disabled={companyDetails.countryCode === ""}
                     onChange={(e) => {
                       const selectedState = states.find(
                         (state) => state.iso2 === e.target.value
@@ -357,7 +372,6 @@ const LeadsForm = ({ leadId, onLeadSave, closeModal, data = "" }) => {
                         name: selectedState?.name || "",
                       });
                     }}
-                    disabled={companyDetails.countryCode === ""}
                     className="w-full p-1 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   >
                     <option value="">Select State</option>
@@ -376,8 +390,8 @@ const LeadsForm = ({ leadId, onLeadSave, closeModal, data = "" }) => {
                   </label>
                   <select
                     value={companyDetails.city}
-                    onChange={(e) => handleInputChange("city", e.target.value)}
                     disabled={companyDetails.stateCode === ""}
+                    onChange={(e) => handleInputChange("city", e.target.value)}
                     className="w-full p-1 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   >
                     <option value="">Select City</option>

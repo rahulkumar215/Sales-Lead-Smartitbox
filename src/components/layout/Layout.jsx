@@ -2,9 +2,20 @@ import { useState } from "react";
 import Sidebar from "./Sidebar"; // Adjust path as needed
 import Navbar from "./Navbar"; // Adjust path as needed
 import { Outlet } from "react-router-dom"; // Used to render the current page content
+import Footer from "../footer/Footer";
 
 const Layout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const userInfo = {
+    uid: "UID-Infini8",
+    name: "Rahul",
+    mobile: "9319444628",
+    email: "rk83029014@gmail.com",
+    designation: "sales",
+    department: "executive",
+    username: "Infini8",
+    password: "415263",
+  };
 
   // Function to toggle sidebar visibility
   const toggleSidebar = () => {
@@ -36,6 +47,8 @@ const Layout = () => {
         >
           <Outlet />
         </div>
+
+        <Footer />
       </div>
     </div>
   );

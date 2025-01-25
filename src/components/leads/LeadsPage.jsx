@@ -12,6 +12,17 @@ import LeadsForm from "./LeadsForm";
 import PopOver from "./PopOver";
 import { IoMail } from "react-icons/io5";
 
+const userInfo = {
+  uid: "UID-Infini8",
+  name: "Rahul",
+  mobile: "9319444628",
+  email: "rk83029014@gmail.com",
+  designation: "sales",
+  department: "executiveadmin",
+  username: "Infini8",
+  password: "415263",
+};
+
 const dummyLeads = [
   {
     leadDetails: {
@@ -31,9 +42,11 @@ const dummyLeads = [
       designation: "MD",
       enquiryType: "Hot",
       timestamp: "24/01/2025, 4:31 pm",
+      assignedToId: "UID-Infini8",
       assignedTo: "Rahul",
       leadType: "CRR",
-      puchedBy: "Kashif",
+      punchedById: "UID-Infini8",
+      punchedBy: "Kashif",
       status: "Pending",
       leadId: "L-001",
     },
@@ -65,9 +78,11 @@ const dummyLeads = [
       designation: "MD",
       enquiryType: "Hot",
       timestamp: "24/01/2025, 4:37 pm",
+      assignedToId: "UID-Infini8",
       assignedTo: "Rahul",
       leadType: "CRR",
-      puchedBy: "Kashif",
+      punchedById: "UID-005",
+      punchedBy: "Kashif",
       status: "Pending",
       leadId: "L-002",
     },
@@ -127,9 +142,11 @@ const dummyLeads = [
       designation: "CEO",
       enquiryType: "Warm",
       timestamp: "24/01/2025, 5:00 pm",
+      assignedToId: "UID-003",
       assignedTo: "John",
-      leadType: "New",
-      puchedBy: "Emily",
+      leadType: "NBD",
+      punchedById: "UID-005",
+      punchedBy: "Emily",
       status: "Follow-Up",
       leadId: "L-003",
     },
@@ -168,9 +185,11 @@ const dummyLeads = [
       designation: "Manager",
       enquiryType: "Cold",
       timestamp: "24/01/2025, 5:15 pm",
+      assignedToId: "UID-004",
       assignedTo: "Sophia",
-      leadType: "Potential",
-      puchedBy: "Mark",
+      leadType: "NBD",
+      punchedById: "UID-005",
+      punchedBy: "Mark",
       status: "Pending",
       leadId: "L-004",
     },
@@ -216,9 +235,11 @@ const dummyLeads = [
       designation: "Director",
       enquiryType: "Hot",
       timestamp: "24/01/2025, 5:45 pm",
+      assignedToId: "UID-005",
       assignedTo: "Liam",
       leadType: "CRR",
-      puchedBy: "Noah",
+      punchedById: "UID-005",
+      punchedBy: "Noah",
       status: "Converted",
       leadId: "L-005",
     },
@@ -251,7 +272,13 @@ const dummyLeads = [
 function LeadsPage() {
   const [leads, setLeads] = useState([]);
   const [items, setItems] = useState([]);
-  const [combLeadDetails, setCombLeadDetails] = useState(dummyLeads);
+  const [combLeadDetails, setCombLeadDetails] = useState(
+    userInfo.department === "admin"
+      ? dummyLeads
+      : dummyLeads.filter(
+          (lead) => lead.leadDetails.assignedToId === userInfo.uid
+        )
+  );
   const [leadToEdit, setLeadToEdit] = useState("");
   const [newLeadId, setNewLeadId] = useState(
     `L-00${combLeadDetails.length + 1}`
@@ -271,7 +298,7 @@ function LeadsPage() {
   };
 
   const filteredLeads = combLeadDetails.filter((lead) =>
-    Object.values(lead)
+    Object.values(lead.leadDetails)
       .join(" ")
       .toLowerCase()
       .includes(searchQuery.toLowerCase())
@@ -316,11 +343,13 @@ function LeadsPage() {
     } else {
       // Lead does not exist: add it as a new entry
       const newLeadEntry = {
-        leadDetails: { ...lead, leadId: newLeadId }, // Assign new leadId
+        leadDetails: lead,
         itemDetails: items,
       };
       setCombLeadDetails((prev) => [...prev, newLeadEntry]);
       setNewLeadId(`L-00${combLeadDetails.length + 1}`);
+      toast.success("Lead saved successfully!");
+      setIsModalOpen(false);
     }
   };
 
@@ -393,6 +422,7 @@ function LeadsPage() {
               <th className="px-6 text-left font-medium text-sm">Actions</th>
               <th className="px-12 text-left font-medium text-sm">Timestamp</th>
               <th className="px-6 text-left font-medium text-sm">Lead ID</th>
+              <th className="px-6 text-left font-medium text-sm">Type</th>
               <th className="px-6 text-left font-medium text-sm">Company</th>
               <th className="px-6 text-left font-medium text-sm">Source</th>
               <th className="px-6 text-left font-medium text-sm">
@@ -445,18 +475,29 @@ function LeadsPage() {
                       >
                         <FaEdit size={20} />
                       </button>
-                      <button
-                        onClick={(e) =>
-                          handleDelete(e, lead.leadDetails.leadId)
-                        }
-                        className="text-red-600 hover:text-red-800"
-                      >
-                        <FaTrashAlt size={20} />
-                      </button>
+                      {userInfo.department === "admin" && (
+                        <button
+                          onClick={(e) =>
+                            handleDelete(e, lead.leadDetails.leadId)
+                          }
+                          className="text-red-600 hover:text-red-800"
+                        >
+                          <FaTrashAlt size={20} />
+                        </button>
+                      )}
                     </td>
                     <td className="py-2">{lead.leadDetails.timestamp}</td>
                     <td className="text-red-800 font-bold">
                       {lead.leadDetails.leadId}
+                    </td>
+                    <td
+                      className={`${
+                        lead.leadDetails.leadType === "NBD"
+                          ? "bg-red-200"
+                          : "bg-green-200"
+                      }`}
+                    >
+                      {lead.leadDetails.leadType}
                     </td>
                     <td>{lead.leadDetails.name}</td>
                     <td>{lead.leadDetails.leadSource}</td>
@@ -474,7 +515,20 @@ function LeadsPage() {
                       <IoMail size={20} className="text-red-700" />
                     </PopOver>
                     <td>{lead.leadDetails.designation}</td>
-                    <td>{lead.leadDetails.enquiryType}</td>
+                    <td
+                      className={`${
+                        lead.leadDetails.enquiryType === "Hot" &&
+                        "bg-red-400 hover:bg-red-500"
+                      } ${
+                        lead.leadDetails.enquiryType === "Cold" &&
+                        " bg-blue-400 hover:bg-blue-500"
+                      } ${
+                        lead.leadDetails.enquiryType === "Warm" &&
+                        "bg-yellow-400 hover:bg-yellow-500"
+                      }`}
+                    >
+                      {lead.leadDetails.enquiryType}
+                    </td>
                     <td>{lead.leadDetails.assignedTo}</td>
                     <td>{lead.leadDetails.remarks}</td>
                     <td>{lead.leadDetails.followupDate}</td>
@@ -482,7 +536,7 @@ function LeadsPage() {
                     <td>{lead.leadDetails.status}</td>
                   </tr>
                   <tr>
-                    <td colSpan="15">
+                    <td colSpan="16">
                       <div
                         ref={(el) => (contentRefs.current[index] = el)}
                         className={`overflow-hidden overflow-x-auto transition-[max-height] duration-500 ease-in-out ${

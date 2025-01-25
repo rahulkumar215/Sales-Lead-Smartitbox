@@ -16,6 +16,17 @@ import { useNavigate } from "react-router-dom";
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   const navigate = useNavigate();
 
+  const userInfo = {
+    uid: "UID-Infini8",
+    name: "Rahul",
+    mobile: "9319444628",
+    email: "rk83029014@gmail.com",
+    designation: "sales",
+    department: "executive",
+    username: "Infini8",
+    password: "415263",
+  };
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
@@ -55,6 +66,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           <span className={`${isOpen ? "block" : "hidden"}`}>Dashboard</span>
         </li>
 
+        {/* Leads */}
         <li
           className="flex items-center space-x-4 hover:cursor-pointer hover:bg-yellow-300 p-2 rounded-md"
           onClick={() => navigate("/leads")}
@@ -63,28 +75,35 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           <span className={`${isOpen ? "block" : "hidden"}`}>All Leads</span>
         </li>
 
-        {/* User Access */}
-        <li
-          className="flex items-center space-x-4 hover:cursor-pointer hover:bg-yellow-300 p-2 rounded-md"
-          onClick={() => navigate("/users")}
-        >
-          <FaUsers className={`text-xl ${isOpen ? "block" : "hidden"}`} />
-          <span className={`${isOpen ? "block" : "hidden"}`}>Users</span>
-        </li>
+        {/* Conditional Rendering for Admin-Only Options */}
+        {userInfo.designation === "admin" && (
+          <>
+            {/* User Access */}
+            <li
+              className="flex items-center space-x-4 hover:cursor-pointer hover:bg-yellow-300 p-2 rounded-md"
+              onClick={() => navigate("/users")}
+            >
+              <FaUsers className={`text-xl ${isOpen ? "block" : "hidden"}`} />
+              <span className={`${isOpen ? "block" : "hidden"}`}>Users</span>
+            </li>
 
-        {/* Item Master */}
-        <li
-          className="flex items-center space-x-4 hover:cursor-pointer hover:bg-yellow-300 p-2 rounded-md"
-          onClick={() => navigate("/items")}
-        >
-          <FaBox className={`text-xl ${isOpen ? "block" : "hidden"}`} />
-          <span className={`${isOpen ? "block" : "hidden"}`}>Item Master</span>
-        </li>
+            {/* Item Master */}
+            <li
+              className="flex items-center space-x-4 hover:cursor-pointer hover:bg-yellow-300 p-2 rounded-md"
+              onClick={() => navigate("/items")}
+            >
+              <FaBox className={`text-xl ${isOpen ? "block" : "hidden"}`} />
+              <span className={`${isOpen ? "block" : "hidden"}`}>
+                Item Master
+              </span>
+            </li>
+          </>
+        )}
 
         {/* Quotations */}
         <li
           className="flex items-center space-x-4 hover:cursor-pointer hover:bg-yellow-300 p-2 rounded-md"
-          onClick={() => navigate("/home")}
+          onClick={() => navigate("/quote")}
         >
           <FaClipboard className={`text-xl ${isOpen ? "block" : "hidden"}`} />
           <span className={`${isOpen ? "block" : "hidden"}`}>Quotations</span>
