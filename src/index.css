@@ -18,9 +18,12 @@ th {
   font-weight: bold !important;
 }
 
+tr:not(:nth-child(even)) td {
+  border-bottom: 1px solid #e5e7eb;
+}
+
 td:not(:last-child) {
   border-right: 1px solid #e5e7eb;
-  border-bottom: 1px solid #e5e7eb;
 }
 
 th:not(:last-child) {

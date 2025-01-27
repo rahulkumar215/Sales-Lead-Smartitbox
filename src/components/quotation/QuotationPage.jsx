@@ -4,13 +4,293 @@ import { FaEdit, FaFilePdf, FaTrashAlt } from "react-icons/fa";
 import { ToastContainer } from "react-toastify";
 import ReactPaginate from "react-paginate";
 
+const dummyLeads = [
+  {
+    leadDetails: {
+      name: "Company A",
+      id: 1,
+      address: "r z c-56",
+      countryCode: "IN",
+      country: "India",
+      stateCode: "DL",
+      state: "Delhi",
+      city: "New Delhi",
+      leadSource: "IndiaMart",
+      industryType: "Chemicals",
+      contactPerson: "Rahul",
+      number: "9319444628",
+      email: "rk83029014@gmail.com",
+      designation: "MD",
+      enquiryType: "Hot",
+      timestamp: "24/01/2025, 4:31 pm",
+      assignedToId: "UID-Infini8",
+      assignedTo: "Rahul",
+      leadType: "CRR",
+      punchedById: "UID-Infini8",
+      punchedBy: "Kashif",
+      status: "Pending",
+      leadId: "L-001",
+    },
+    itemDetails: [
+      {
+        category: "Electronics",
+        name: "Phone",
+        qty: "1",
+        price: "12",
+        total: 12,
+      },
+    ],
+  },
+  {
+    leadDetails: {
+      name: "Company A",
+      id: 1,
+      address: "r z c-56",
+      countryCode: "IN",
+      country: "India",
+      stateCode: "DL",
+      state: "Delhi",
+      city: "New Delhi",
+      leadSource: "IndiaMart",
+      industryType: "Chemicals",
+      contactPerson: "Rahul",
+      number: "9319444628",
+      email: "rk83029014@gmail.com",
+      designation: "MD",
+      enquiryType: "Hot",
+      timestamp: "24/01/2025, 4:37 pm",
+      assignedToId: "UID-Infini8",
+      assignedTo: "Rahul",
+      leadType: "CRR",
+      punchedById: "UID-005",
+      punchedBy: "Kashif",
+      status: "Pending",
+      leadId: "L-002",
+    },
+    itemDetails: [
+      {
+        category: "Furniture",
+        name: "Chair",
+        qty: "1",
+        price: "100",
+        total: 100,
+      },
+      {
+        category: "Furniture",
+        name: "Table",
+        qty: "2",
+        price: "200",
+        total: 400,
+      },
+      {
+        category: "Electronics",
+        name: "Tablet",
+        qty: "3",
+        price: "300",
+        total: 900,
+      },
+      {
+        category: "Stationery",
+        name: "Pen",
+        qty: "4",
+        price: "400",
+        total: 1600,
+      },
+      {
+        category: "Furniture",
+        name: "Chair",
+        qty: "5",
+        price: "500",
+        total: 2500,
+      },
+    ],
+  },
+  {
+    leadDetails: {
+      name: "Company B",
+      id: 2,
+      address: "45-B, Industrial Area",
+      countryCode: "US",
+      country: "United States",
+      stateCode: "CA",
+      state: "California",
+      city: "Los Angeles",
+      leadSource: "LinkedIn",
+      industryType: "Technology",
+      contactPerson: "Alice Johnson",
+      number: "9876543210",
+      email: "alice.j@example.com",
+      designation: "CEO",
+      enquiryType: "Warm",
+      timestamp: "24/01/2025, 5:00 pm",
+      assignedToId: "UID-003",
+      assignedTo: "John",
+      leadType: "NBD",
+      punchedById: "UID-005",
+      punchedBy: "Emily",
+      status: "Follow-Up",
+      leadId: "L-003",
+    },
+    itemDetails: [
+      {
+        category: "Software",
+        name: "CRM Tool",
+        qty: "1",
+        price: "500",
+        total: 500,
+      },
+      {
+        category: "Services",
+        name: "Consulting",
+        qty: "1",
+        price: "1500",
+        total: 1500,
+      },
+    ],
+  },
+  {
+    leadDetails: {
+      name: "Company C",
+      id: 3,
+      address: "12 Park Avenue",
+      countryCode: "AU",
+      country: "Australia",
+      stateCode: "NSW",
+      state: "New South Wales",
+      city: "Sydney",
+      leadSource: "Google Ads",
+      industryType: "Healthcare",
+      contactPerson: "Michael Green",
+      number: "9123456789",
+      email: "michael.g@example.com",
+      designation: "Manager",
+      enquiryType: "Cold",
+      timestamp: "24/01/2025, 5:15 pm",
+      assignedToId: "UID-004",
+      assignedTo: "Sophia",
+      leadType: "NBD",
+      punchedById: "UID-005",
+      punchedBy: "Mark",
+      status: "Pending",
+      leadId: "L-004",
+    },
+    itemDetails: [
+      {
+        category: "Medical Supplies",
+        name: "Surgical Gloves",
+        qty: "50",
+        price: "5",
+        total: 250,
+      },
+      {
+        category: "Medical Supplies",
+        name: "Face Masks",
+        qty: "100",
+        price: "2",
+        total: 200,
+      },
+      {
+        category: "Medical Equipment",
+        name: "ECG Machine",
+        qty: "1",
+        price: "1500",
+        total: 1500,
+      },
+    ],
+  },
+  {
+    leadDetails: {
+      name: "Company D",
+      id: 4,
+      address: "88 Main Street",
+      countryCode: "UK",
+      country: "United Kingdom",
+      stateCode: "LND",
+      state: "London",
+      city: "London",
+      leadSource: "Facebook",
+      industryType: "Retail",
+      contactPerson: "Emma Brown",
+      number: "8754693210",
+      email: "emma.b@example.com",
+      designation: "Director",
+      enquiryType: "Hot",
+      timestamp: "24/01/2025, 5:45 pm",
+      assignedToId: "UID-005",
+      assignedTo: "Liam",
+      leadType: "CRR",
+      punchedById: "UID-005",
+      punchedBy: "Noah",
+      status: "Converted",
+      leadId: "L-005",
+    },
+    itemDetails: [
+      {
+        category: "Apparel",
+        name: "T-Shirt",
+        qty: "20",
+        price: "10",
+        total: 200,
+      },
+      {
+        category: "Apparel",
+        name: "Jeans",
+        qty: "15",
+        price: "25",
+        total: 375,
+      },
+      {
+        category: "Accessories",
+        name: "Belts",
+        qty: "30",
+        price: "5",
+        total: 150,
+      },
+    ],
+  },
+  {
+    leadDetails: {
+      name: "Company B",
+      id: 3,
+      address: "45 Elm Street",
+      countryCode: "US",
+      country: "United States",
+      stateCode: "NY",
+      state: "New York",
+      city: "New York City",
+      leadSource: "Trade Show",
+      industryType: "Technology",
+      contactPerson: "Alice Johnson",
+      number: "9876543210",
+      email: "alice.johnson@example.com",
+      designation: "CTO",
+      enquiryType: "Warm",
+      timestamp: "24/01/2025, 6:00 pm",
+      assignedToId: "UID-Infini8",
+      assignedTo: "Michael",
+      leadType: "NBD",
+      punchedById: "UID-001",
+      punchedBy: "Sophia",
+      status: "In Progress",
+      leadId: "L-003",
+    },
+    itemDetails: Array.from({ length: 25 }, (_, i) => ({
+      category: "Category " + (i + 1),
+      name: "Item " + (i + 1),
+      qty: (i + 1).toString(),
+      price: (i + 1) * 10,
+      total: (i + 1) * 10,
+    })),
+  },
+];
+
 function QuotationPage() {
   const [quotations, setQuotations] = useState([
     {
-      leadId: "140080",
+      leadId: "L-001",
       leadSource: "Referral",
       quotationNo: "SMT/24-25/0033",
-      clientName: "Client_36",
+      clientName: "Cilicon Extruders",
       contactPerson: "Neha",
       email: "user46@example.com",
       assignedTo: "Rahul",
@@ -823,6 +1103,8 @@ function QuotationPage() {
       pdfUrl: "http://example.com/pdf/100.pdf",
     },
   ]);
+  const [editLeadId, setEditLeadId] = useState("");
+  const [leadToEdit, setLeadToEdit] = useState("");
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -841,6 +1123,15 @@ function QuotationPage() {
     setCurrentPage(data.selected);
   };
 
+  const handleEditQuotations = (e, leadId) => {
+    e.stopPropagation();
+    setLeadToEdit(
+      dummyLeads.find((lead) => lead.leadDetails.leadId === leadId)
+    );
+    setIsModalOpen(true);
+    setEditLeadId(leadId);
+  };
+
   const paginatedQuotations = filteredQuotations.slice(
     currentPage * itemsPerPage,
     (currentPage + 1) * itemsPerPage
@@ -848,20 +1139,10 @@ function QuotationPage() {
 
   const pageCount = Math.ceil(filteredQuotations.length / itemsPerPage);
 
-  const handleEditQuotations = () => {
-    // const quotationsWithIds = newQuotations.map((quotation) => ({
-    //   ...quotation,
-    //   id: `QUO-${Math.floor(100000 + Math.random() * 900000)}`,
-    // }));
-
-    // setQuotations((prev) => [...prev, ...quotationsWithIds]);
-    setIsModalOpen(true);
-  };
-
-  const handleDelete = (index) => {
-    const updatedQuotations = quotations.filter((_, i) => i !== index);
-    setQuotations(updatedQuotations);
-  };
+  // const handleDelete = (index) => {
+  //   const updatedQuotations = quotations.filter((_, i) => i !== index);
+  //   setQuotations(updatedQuotations);
+  // };
 
   return (
     <div className="min-h-screen bg-white p-3">
@@ -871,6 +1152,8 @@ function QuotationPage() {
         <QuotationForm
           onQuotationsSave={handleEditQuotations}
           closeModal={() => setIsModalOpen(false)}
+          leadId={editLeadId}
+          data={leadToEdit}
         />
       )}
 
@@ -893,21 +1176,22 @@ function QuotationPage() {
             <tr>
               <th className="px-12 text-left font-medium text-sm">Timestamp</th>
               <th className=" text-center font-medium text-sm">Lead ID</th>
-              <th className="px-3 text-left font-medium text-sm">Source</th>
-              <th className="px-6 text-center font-medium text-sm">
-                Quotation No.
-              </th>
+              {/* <th className="px-3 text-left font-medium text-sm">Source</th> */}
               <th className="px-3 text-left font-medium text-sm">
                 Client Name
               </th>
-              <th className="px-3 text-left font-medium text-sm">
+              <th className="px-6 text-center font-medium text-sm">
+                Quotation No.
+              </th>
+
+              {/* <th className="px-3 text-left font-medium text-sm">
                 Contact Person
-              </th>
-              <th className="px-3 text-left font-medium text-sm">Email</th>
-              <th className="px-3 text-left font-medium text-sm">
+              </th> */}
+              {/* <th className="px-3 text-left font-medium text-sm">Email</th> */}
+              {/* <th className="px-3 text-left font-medium text-sm">
                 Assigned to
-              </th>
-              <th className="px-3 text-left font-medium text-sm">Created by</th>
+              </th> */}
+              {/* <th className="px-3 text-left font-medium text-sm">Created by</th> */}
               <th className="px-3 text-left font-medium text-sm">
                 Quotation Amount
               </th>
@@ -942,15 +1226,15 @@ function QuotationPage() {
                     })}
                   </td>
                   <td className="px-2 py-1 text-sm">{quotation.leadId}</td>
-                  <td className="px-2 py-1 text-sm">{quotation.leadSource}</td>
-                  <td className="px-2 py-1 text-sm">{quotation.quotationNo}</td>
                   <td className="px-2 py-1 text-sm">{quotation.clientName}</td>
-                  <td className="px-2 py-1 text-sm">
+                  {/* <td className="px-2 py-1 text-sm">{quotation.leadSource}</td> */}
+                  <td className="px-2 py-1 text-sm">{quotation.quotationNo}</td>
+                  {/* <td className="px-2 py-1 text-sm">
                     {quotation.contactPerson}
-                  </td>
-                  <td className="px-2 py-1 text-sm">{quotation.email}</td>
-                  <td className="px-2 py-1 text-sm">{quotation.assignedTo}</td>
-                  <td className="px-2 py-1 text-sm">{quotation.createdBy}</td>
+                  </td> */}
+                  {/* <td className="px-2 py-1 text-sm">{quotation.email}</td> */}
+                  {/* <td className="px-2 py-1 text-sm">{quotation.assignedTo}</td> */}
+                  {/* <td className="px-2 py-1 text-sm">{quotation.createdBy}</td> */}
                   <td className="px-2 py-1 text-sm">{quotation.amount}</td>
                   <td className="px-2 py-1 text-sm">
                     <a
@@ -964,17 +1248,17 @@ function QuotationPage() {
                   </td>
                   <td className="px-2 py-1 text-center text-sm">
                     <button
-                      onClick={handleEditQuotations}
+                      onClick={(e) => handleEditQuotations(e, quotation.leadId)}
                       className="text-indigo-600 mr-2 hover:text-indigo-800"
                     >
                       <FaEdit size={20} />
                     </button>
-                    <button
+                    {/* <button
                       onClick={() => handleDelete(index)}
                       className="text-red-600 hover:text-red-800"
                     >
                       <FaTrashAlt size={20} />
-                    </button>
+                    </button> */}
                   </td>
                 </tr>
               ))

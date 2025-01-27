@@ -1,10 +1,19 @@
 import React, { useRef, useState } from "react";
-import { FaEdit, FaPhoneAlt, FaPlus, FaTrashAlt } from "react-icons/fa";
+import {
+  FaEdit,
+  FaHistory,
+  FaPhoneAlt,
+  FaPlus,
+  FaTrashAlt,
+} from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import ReactPaginate from "react-paginate";
 import LeadsForm from "./LeadsForm";
 import PopOver from "./PopOver";
 import { IoMail } from "react-icons/io5";
+import { CiEdit } from "react-icons/ci";
+import TakeFollowUpForm from "./TakeFollowUpForm";
+import FollowUpHistory from "./FollowUpHistory";
 
 const userInfo = {
   uid: "UID-Infini8",
@@ -300,6 +309,7 @@ const dummyLeads = [
 function LeadsPage() {
   const [leads, setLeads] = useState([]);
   const [items, setItems] = useState([]);
+  const [followUps, setFollowUps] = useState([]);
   const [combLeadDetails, setCombLeadDetails] = useState(
     userInfo.department === "admin"
       ? dummyLeads
@@ -313,10 +323,12 @@ function LeadsPage() {
   );
   const [expandedRow, setExpandedRow] = useState(null);
   const contentRefs = useRef([]);
-
+  const [leadFollowUpHistory, setLeadFollowUpHistory] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [isFollowUpHistoryModalOpen, setIsFollowUpHistoryModalOpen] =
+    useState(false);
+  const [isTakeFollowUpModalOpen, setIsTakeFollowUpModalOpen] = useState(false);
   // Add state and logic for pagination
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 10; // Adjust this as needed
@@ -344,6 +356,12 @@ function LeadsPage() {
 
   // Calculate the page count
   const pageCount = Math.ceil(filteredLeads.length / itemsPerPage);
+
+  const handleTakeFollowUp = (data) => {
+    setFollowUps((prev) => [...prev, data]);
+  };
+
+  console.log(JSON.stringify(followUps));
 
   const handleDelete = (e, leadId) => {
     e.stopPropagation();
@@ -379,6 +397,11 @@ function LeadsPage() {
       toast.success("Lead saved successfully!");
       setIsModalOpen(false);
     }
+  };
+
+  const showFollowUpHistory = (leadId) => {
+    setIsFollowUpHistoryModalOpen(true);
+    setLeadFollowUpHistory(leadId);
   };
 
   // const handleAddLead = (lead, items) => {
@@ -419,6 +442,26 @@ function LeadsPage() {
           closeModal={() => setIsModalOpen(false)}
           onLeadSave={handleAddLead}
           data={leadToEdit}
+        />
+      )}
+
+      {/* Take Follow Up Modal Implementation */}
+      {isTakeFollowUpModalOpen && (
+        <TakeFollowUpForm
+          leadId={leadFollowUpHistory}
+          closeModal={() => setIsTakeFollowUpModalOpen(false)}
+          onSave={handleTakeFollowUp}
+          isModalOpen={isTakeFollowUpModalOpen}
+        />
+      )}
+
+      {/* Take Follow Up Modal Implementation */}
+      {isFollowUpHistoryModalOpen && (
+        <FollowUpHistory
+          data={followUps.filter(
+            (followup) => followup.leadId == leadFollowUpHistory
+          )}
+          closeModal={() => setIsFollowUpHistoryModalOpen(false)}
         />
       )}
 
@@ -608,6 +651,29 @@ function LeadsPage() {
                                 <strong>Industry Type:</strong>{" "}
                                 {lead.leadDetails.industryType}
                               </p>
+                              <div className="grid grid-cols-2 gap-2 mt-2">
+                                <button
+                                  className="bg-teal-600 flex gap-2 justify-center items-center hover:bg-teal-700 py-2 px-4 rounded-md text-white "
+                                  onClick={() =>
+                                    showFollowUpHistory(lead.leadDetails.leadId)
+                                  }
+                                >
+                                  <FaHistory size={20} />
+                                  Follow Up History
+                                </button>
+                                <button
+                                  className="bg-red-600 flex gap-2 justify-center items-center hover:bg-red-700 py-2 px-4 rounded-md text-white"
+                                  onClick={() => {
+                                    setIsTakeFollowUpModalOpen(true);
+                                    setLeadFollowUpHistory(
+                                      lead.leadDetails.leadId
+                                    );
+                                  }}
+                                >
+                                  <FaEdit size={20} />
+                                  Take Follow Up
+                                </button>
+                              </div>
                             </div>
                           </div>
 

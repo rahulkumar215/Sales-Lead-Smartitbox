@@ -20,14 +20,14 @@ const userInfo = {
   mobile: "9319444628",
   email: "rk83029014@gmail.com",
   designation: "sales",
-  department: "executive",
+  department: "admin",
   username: "Infini8",
   password: "415263",
 };
 
 // Role-based Route Guard
 const PrivateRoute = ({ allowedRoles, children }) => {
-  const userRole = userInfo.designation; // Replace with actual role retrieval logic
+  const userRole = userInfo.department; // Replace with actual role retrieval logic
 
   if (!allowedRoles.includes(userRole)) {
     return <Navigate to="/login" replace />;

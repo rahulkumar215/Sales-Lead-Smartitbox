@@ -22,7 +22,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     mobile: "9319444628",
     email: "rk83029014@gmail.com",
     designation: "sales",
-    department: "executive",
+    department: "admin",
     username: "Infini8",
     password: "415263",
   };
@@ -76,7 +76,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         </li>
 
         {/* Conditional Rendering for Admin-Only Options */}
-        {userInfo.designation === "admin" && (
+        {userInfo.department === "admin" && (
           <>
             {/* User Access */}
             <li
