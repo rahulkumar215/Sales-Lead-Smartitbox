@@ -50,7 +50,7 @@ const dummyLeads = [
       leadType: "CRR",
       punchedById: "UID-Infini8",
       punchedBy: "Kashif",
-      status: "Pending",
+      status: "In-Process",
       leadId: "L-001",
     },
     itemDetails: [
@@ -86,7 +86,7 @@ const dummyLeads = [
       leadType: "CRR",
       punchedById: "UID-005",
       punchedBy: "Kashif",
-      status: "Pending",
+      status: "Won",
       leadId: "L-002",
     },
     itemDetails: [
@@ -150,7 +150,7 @@ const dummyLeads = [
       leadType: "NBD",
       punchedById: "UID-005",
       punchedBy: "Emily",
-      status: "Follow-Up",
+      status: "Lost",
       leadId: "L-003",
     },
     itemDetails: [
@@ -293,7 +293,7 @@ const dummyLeads = [
       leadType: "NBD",
       punchedById: "UID-001",
       punchedBy: "Sophia",
-      status: "In Progress",
+      status: "Lost",
       leadId: "L-003",
     },
     itemDetails: Array.from({ length: 25 }, (_, i) => ({
@@ -610,7 +610,19 @@ function LeadsPage() {
                     <td>{lead.leadDetails.remarks}</td>
                     <td>{lead.leadDetails.followupDate}</td>
                     <td>{lead.leadDetails.punchedBy}</td>
-                    <td>{lead.leadDetails.status}</td>
+                    <td>
+                      <span
+                        className={`px-1 py-0.5 rounded-md ${
+                          lead.leadDetails.status === "Won"
+                            ? "bg-green-200 border border-green-400"
+                            : lead.leadDetails.status === "Lost"
+                            ? "bg-red-200 border border-red-400"
+                            : "bg-yellow-200 border border-yellow-400"
+                        }`}
+                      >
+                        {lead.leadDetails.status}
+                      </span>
+                    </td>
                   </tr>
                   <tr>
                     <td colSpan="16">
