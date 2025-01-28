@@ -23,7 +23,7 @@ const Layout = () => {
   };
 
   return (
-    <div className="flex">
+    <div className="flex overflow-hidden">
       {/* Sidebar */}
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 

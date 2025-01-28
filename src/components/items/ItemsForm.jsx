@@ -26,15 +26,18 @@ function ItemsForm({ onItemsChange, closeModal }) {
   };
 
   const addItem = () => {
-    setItems([...items, { category: "", itemName: "" }]);
+    setItems([...items, { category: "", itemName: "", units: "", rate: "" }]);
     setTimeout(() => {
-      inputRefs.current[items.length].focus();
+      inputRefs.current[items.length]?.focus();
     }, 0);
   };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75 z-50">
-      <div className="bg-white p-3 w-[90vw] sm:w-[70vw] md:w-[60vw] lg:w-[50vw] xl:w-[40vw] rounded-lg shadow-lg max-h-[80vh] overflow-y-auto">
+      <div
+        className="bg-white p-3 m-4 w-[90vw] sm:w-fit rounded-lg shadow-lg max-h-[80vh] overflow-y-auto"
+        style={{ scrollbarWidth: "thin" }}
+      >
         <form
           onSubmit={handleSubmit}
           className="bg-white p-2 rounded-lg w-full mx-auto"
@@ -44,61 +47,80 @@ function ItemsForm({ onItemsChange, closeModal }) {
           </h2>
           <FileUpload onFileData={setItems}>Import Items from excel</FileUpload>
 
-          {items.map((item, index) => (
-            <div
-              key={index}
-              className="flex flex-col sm:flex-row items-center gap-4 bg-gray-50 p-2 rounded-md shadow-sm mb-2"
-            >
-              <input
-                ref={(el) => (inputRefs.current[index] = el)}
-                type="text"
-                placeholder="Category"
-                value={item.category}
-                required
-                onChange={(e) =>
-                  handleChange(index, "category", e.target.value)
-                }
-                className="border border-gray-300 rounded-md px-4 py-2 w-full sm:w-60 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-              <input
-                type="text"
-                placeholder="Item Name"
-                value={item.itemName}
-                required
-                onChange={(e) =>
-                  handleChange(index, "itemName", e.target.value)
-                }
-                className="border border-gray-300 rounded-md px-4 py-2 w-full sm:w-60 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-              <Button
-                onClick={() => removeItem(index)}
-                className="!text-red-600 hover:text-red-800 font-bold !bg-transparent"
+          <div className="p-1 grid gap-1 mt-2">
+            {items.map((item, index) => (
+              <div
+                key={index}
+                className="flex flex-col sm:flex-row items-center gap-1 bg-gray-50 rounded-md shadow-sm "
               >
-                <IoMdClose size={20} />
-              </Button>
-            </div>
-          ))}
+                <input
+                  ref={(el) => (inputRefs.current[index] = el)}
+                  type="text"
+                  placeholder="Category"
+                  value={item.category}
+                  required
+                  onChange={(e) =>
+                    handleChange(index, "category", e.target.value)
+                  }
+                  className="border border-gray-300 rounded-md px-2 py-1 w-full sm:w-40 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+                <input
+                  type="text"
+                  placeholder="Item Name"
+                  value={item.itemName}
+                  required
+                  onChange={(e) =>
+                    handleChange(index, "itemName", e.target.value)
+                  }
+                  className="border border-gray-300 rounded-md px-2 py-1 w-full sm:w-40 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+                <input
+                  type="text"
+                  placeholder="Units"
+                  value={item.units}
+                  required
+                  onChange={(e) => handleChange(index, "units", e.target.value)}
+                  className="border border-gray-300 rounded-md px-2 py-1 w-full sm:w-40 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+                <input
+                  type="number"
+                  placeholder="Rate"
+                  value={item.rate}
+                  required
+                  onChange={(e) => handleChange(index, "rate", e.target.value)}
+                  className="border border-gray-300 rounded-md px-2 py-1 w-full sm:w-40 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+                <Button
+                  onClick={() => removeItem(index)}
+                  className="!text-red-600 hover:text-red-800 font-bold !bg-transparent"
+                >
+                  <IoMdClose size={20} />
+                </Button>
+              </div>
+            ))}
+          </div>
 
-          <div className="flex justify-end mt-4 gap-4 items-center sticky bottom-0 bg-white py-2">
+          <div className="flex justify-end mt-4 gap-2 items-center sticky bottom-0 bg-white py-2">
             <button
-              type="primary"
-              className="px-6 py-3 bg-blue-500 text-white"
+              type="button"
+              className="px-3 py-2 bg-blue-500 text-white rounded-sm hover:bg-blue-600"
               onClick={addItem}
             >
-              <FaPlus />
+              <FaPlus size={16} />
             </button>
-            <Button
-              behaviour="submit"
-              className="!bg-indigo-600 text-white px-6 py-2 rounded-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            <button
+              type="submit"
+              className="!bg-indigo-600 text-white px-3 py-1 rounded-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-600"
             >
               Submit
-            </Button>
-            <Button
+            </button>
+            <button
+              type="button"
               onClick={closeModal}
-              className="!bg-gray-500 text-white px-6 py-2 rounded-sm hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400"
+              className="!bg-gray-500 text-white px-3 py-1 rounded-sm hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400"
             >
               Close
-            </Button>
+            </button>
           </div>
         </form>
       </div>

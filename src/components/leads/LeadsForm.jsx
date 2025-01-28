@@ -27,19 +27,7 @@ const LeadsForm = ({ leadId, onLeadSave, closeModal, data = "" }) => {
   const [companyDetails, setCompanyDetails] = useState(
     data ? data.leadDetails : ""
   );
-  const [items, setItems] = useState(
-    data
-      ? [...data.itemDetails]
-      : [
-          {
-            category: "",
-            name: "",
-            qty: "",
-            price: "",
-            total: "",
-          },
-        ]
-  );
+  const [items, setItems] = useState(data ? [...data.itemDetails] : []);
 
   const { randomUUID } = new ShortUniqueId({ length: 10 });
 
@@ -231,7 +219,7 @@ const LeadsForm = ({ leadId, onLeadSave, closeModal, data = "" }) => {
     companyDetails["leadId"] = leadId;
 
     onLeadSave(companyDetails, items);
-    generatePDF(companyDetails, items);
+    items.length > 0 && generatePDF(companyDetails, items);
   };
 
   return (

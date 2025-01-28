@@ -392,11 +392,14 @@ function LeadsPage() {
         leadDetails: lead,
         itemDetails: items,
       };
-      setCombLeadDetails((prev) => [...prev, newLeadEntry]);
-      setNewLeadId(`L-00${combLeadDetails.length + 1}`);
-      toast.success("Lead saved successfully!");
-      setIsModalOpen(false);
+
+      const newCombLeadDetails = [...combLeadDetails, newLeadEntry];
+
+      setNewLeadId(`L-00${newCombLeadDetails.length + 1}`);
+      setCombLeadDetails(newCombLeadDetails);
     }
+    toast.success("Lead saved successfully!");
+    setIsModalOpen(false);
   };
 
   const showFollowUpHistory = (leadId) => {
@@ -715,50 +718,60 @@ function LeadsPage() {
                                 </tr>
                               </thead>
                               <tbody>
-                                {lead.itemDetails.map((item, i) => (
-                                  <tr
-                                    key={i}
-                                    className={
-                                      i % 2 === 0 ? "bg-gray-100" : "bg-white"
-                                    }
-                                  >
-                                    <td className="px-2 py-1 border border-gray-300 text-sm">
-                                      {item.category}
-                                    </td>
-                                    <td className="px-2 py-1 border border-gray-300 text-sm">
-                                      {item.name}
-                                    </td>
-                                    <td className="px-2 py-1 border border-gray-300 text-sm">
-                                      {parseFloat(item.qty).toFixed(2)}
-                                    </td>
-                                    <td className="px-2 py-1 border border-gray-300 text-sm">
-                                      ₹{parseFloat(item.price).toFixed(2)}
-                                    </td>
-                                    <td className="px-2 py-1 border border-gray-300 text-sm">
-                                      ₹{parseFloat(item.total).toFixed(2)}
+                                {lead.itemDetails.length === 0 ? (
+                                  <tr className=" text-center">
+                                    <td colSpan={16}>
+                                      Items are not added for this lead.
                                     </td>
                                   </tr>
-                                ))}
+                                ) : (
+                                  lead.itemDetails.map((item, i) => (
+                                    <tr
+                                      key={i}
+                                      className={
+                                        i % 2 === 0 ? "bg-gray-100" : "bg-white"
+                                      }
+                                    >
+                                      <td className="px-2 py-1 border border-gray-300 text-sm">
+                                        {item.category}
+                                      </td>
+                                      <td className="px-2 py-1 border border-gray-300 text-sm">
+                                        {item.name}
+                                      </td>
+                                      <td className="px-2 py-1 border border-gray-300 text-sm">
+                                        {parseFloat(item.qty).toFixed(2)}
+                                      </td>
+                                      <td className="px-2 py-1 border border-gray-300 text-sm">
+                                        ₹{parseFloat(item.price).toFixed(2)}
+                                      </td>
+                                      <td className="px-2 py-1 border border-gray-300 text-sm">
+                                        ₹{parseFloat(item.total).toFixed(2)}
+                                      </td>
+                                    </tr>
+                                  ))
+                                )}
                               </tbody>
-                              <tfoot>
-                                <tr className="bg-blue-100 !border-none text-red-700 font-bold">
-                                  <th
-                                    colSpan="4"
-                                    className="px-2 py-3 !border-none text-right  font-semibold"
-                                  >
-                                    Total Value:
-                                  </th>
-                                  <th className="px-2 py-1 !border-none text-left  font-semibold">
-                                    ₹
-                                    {lead.itemDetails
-                                      .reduce(
-                                        (sum, item) => sum + item.total,
-                                        0
-                                      )
-                                      .toFixed(2)}
-                                  </th>
-                                </tr>
-                              </tfoot>
+                              {lead.itemDetails.length > 0 && (
+                                <tfoot>
+                                  <tr className="bg-blue-100 !border-none text-red-700 font-bold">
+                                    <th
+                                      colSpan="4"
+                                      className="px-2 py-3 !border-none text-right  font-semibold"
+                                    >
+                                      Total Value:
+                                    </th>
+                                    <th className="px-2 py-1 !border-none text-left  font-semibold">
+                                      ₹
+                                      {lead.itemDetails
+                                        .reduce(
+                                          (sum, item) => sum + item.total,
+                                          0
+                                        )
+                                        .toFixed(2)}
+                                    </th>
+                                  </tr>
+                                </tfoot>
+                              )}
                             </table>
                           </div>
                         </div>

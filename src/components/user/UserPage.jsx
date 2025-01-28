@@ -12,8 +12,7 @@ const UserPage = () => {
       name: "Alice Johnson",
       mobile: "9876543210",
       email: "alice.johnson@example.com",
-      designation: "Software Engineer",
-      department: "IT",
+      role: "admin",
       username: "alice.johnson",
       password: "Pass@1234",
     },
@@ -22,8 +21,7 @@ const UserPage = () => {
       name: "Bob Smith",
       mobile: "9123456789",
       email: "bob.smith@example.com",
-      designation: "Product Manager",
-      department: "Product",
+      role: "executive",
       username: "bob.smith",
       password: "Pass@5678",
     },
@@ -32,8 +30,7 @@ const UserPage = () => {
       name: "Charlie Davis",
       mobile: "9988776655",
       email: "charlie.davis@example.com",
-      designation: "HR Specialist",
-      department: "Human Resources",
+      role: "executive",
       username: "charlie.davis",
       password: "Pass@9012",
     },
@@ -42,8 +39,7 @@ const UserPage = () => {
       name: "Diana Miller",
       mobile: "8888888888",
       email: "diana.miller@example.com",
-      designation: "Marketing Lead",
-      department: "Marketing",
+      role: "executive",
       username: "diana.miller",
       password: "Pass@3456",
     },
@@ -52,8 +48,7 @@ const UserPage = () => {
       name: "Ethan Brown",
       mobile: "7777777777",
       email: "ethan.brown@example.com",
-      designation: "Data Analyst",
-      department: "Analytics",
+      role: "executive",
       username: "ethan.brown",
       password: "Pass@7890",
     },
@@ -65,8 +60,7 @@ const UserPage = () => {
     name: "",
     mobile: "",
     email: "",
-    designation: "",
-    department: "",
+    role: "executive",
     username: "",
     password: "",
   });
@@ -74,18 +68,30 @@ const UserPage = () => {
   const generateUID = () => `user-${Math.floor(Math.random() * 1000000)}`;
 
   const handleAddUser = () => {
-    // Close the modal after successful submission
-    setIsModalOpen(false);
-    const newUserWithUID = { ...newUser, uid: generateUID() };
-    setUsers([...users, newUserWithUID]);
-    toast.success("User added successfully!");
+    const existingUserIndex = users.findIndex(
+      (user) => user.uid === newUser.uid
+    );
+
+    if (existingUserIndex !== -1) {
+      // Update existing user details
+      const updatedUsers = [...users];
+      updatedUsers[existingUserIndex] = { ...newUser };
+      setUsers(updatedUsers);
+      toast.success("User updated successfully!");
+    } else {
+      // Add a new user
+      const newUserWithUID = { ...newUser, uid: generateUID() };
+      setUsers([...users, newUserWithUID]);
+      toast.success("User added successfully!");
+    }
+
+    // Close the modal and reset the form
     setIsModalOpen(false);
     setNewUser({
       name: "",
       mobile: "",
       email: "",
-      designation: "",
-      department: "",
+      role: "",
       username: "",
       password: "",
     });
@@ -113,7 +119,7 @@ const UserPage = () => {
       .includes(searchQuery.toLowerCase())
   );
 
-  const usersPerPage = 5;
+  const usersPerPage = 10;
   const pageCount = Math.ceil(filteredUsers.length / usersPerPage);
   const displayUsers = filteredUsers.slice(
     pageNumber * usersPerPage,
@@ -169,8 +175,7 @@ const UserPage = () => {
                 "Name",
                 "Mobile",
                 "Email",
-                "Designation",
-                "Department",
+                "Role",
                 "Username",
                 "Actions",
               ].map((header) => (
@@ -196,19 +201,13 @@ const UserPage = () => {
                   key={user.uid}
                   className="hover:bg-gray-50 border border-t-gray-300  "
                 >
-                  {[
-                    "uid",
-                    "name",
-                    "mobile",
-                    "email",
-                    "designation",
-                    "department",
-                    "username",
-                  ].map((field) => (
-                    <td key={field} className="px-3 py-2 text-sm">
-                      {user[field]}
-                    </td>
-                  ))}
+                  {["uid", "name", "mobile", "email", "role", "username"].map(
+                    (field) => (
+                      <td key={field} className="px-3 py-2 text-sm">
+                        {user[field]}
+                      </td>
+                    )
+                  )}
                   <td className="px-3 py-2 flex gap-2 items-center justify-center">
                     <button
                       onClick={() => handleEditUser(user.uid)}

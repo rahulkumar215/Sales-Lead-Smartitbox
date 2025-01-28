@@ -25,7 +25,7 @@ function Login() {
   const login = (e) => {
     e.preventDefault();
     if (username && password) {
-      navigate("/home");
+      navigate("/leads");
     }
   };
   return (

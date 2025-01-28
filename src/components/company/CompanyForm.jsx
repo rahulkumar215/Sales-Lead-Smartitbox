@@ -1,37 +1,14 @@
-import { useState } from "react";
-import * as XLSX from "xlsx"; // Install xlsx for Excel parsing
+import { useRef, useState } from "react";
+import { FaPlus, FaTrashAlt } from "react-icons/fa";
+import FileUpload from "./FileUpload";
 
-const CompanyForm = () => {
-  const [companies, setCompanies] = useState([]);
-  const [newCompany, setNewCompany] = useState({
-    companyName: "",
-    address: "",
-    country: "",
-    state: "",
-    city: "",
-    industryType: "",
-    contactPerson: "",
-    number: "",
-    email: "",
-    designation: "",
-    designationType: "",
-    department: "",
-  });
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewCompany({ ...newCompany, [name]: value });
-  };
-
-  const handleAddCompany = () => {
-    if (Object.values(newCompany).some((field) => !field)) {
-      alert("Please fill all fields before adding a company.");
-      return;
-    }
-    setCompanies([...companies, newCompany]);
-    setNewCompany({
+// eslint-disable-next-line react/prop-types
+const CompanyForm = ({ onAddCompany, closeModal }) => {
+  const [companies, setCompanies] = useState([
+    {
       companyName: "",
       address: "",
+      gst: "",
       country: "",
       state: "",
       city: "",
@@ -40,156 +17,171 @@ const CompanyForm = () => {
       number: "",
       email: "",
       designation: "",
-      designationType: "",
-      department: "",
-    });
-    alert("Company added successfully!");
+    },
+  ]);
+  const inputRefs = useRef([]);
+
+  const handleInputChange = (index, field, value) => {
+    const updatedCompanies = [...companies];
+    updatedCompanies[index][field] = value;
+    setCompanies(updatedCompanies);
   };
 
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    if (!file || !file.name.endsWith(".xlsx")) {
-      alert("Please upload a valid Excel file.");
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const data = event.target.result;
-      const workbook = XLSX.read(data, { type: "binary" });
-      const sheetName = workbook.SheetNames[0];
-      const sheet = workbook.Sheets[sheetName];
-      const parsedData = XLSX.utils.sheet_to_json(sheet);
-      setCompanies(parsedData);
-    };
-    reader.readAsBinaryString(file);
+  const removeCompany = (index) => {
+    const updatedCompanies = companies.filter((_, i) => i !== index);
+    setCompanies(updatedCompanies);
   };
 
-  const handleSampleDownload = () => {
-    const sampleData = [
+  const addCompany = () => {
+    setCompanies([
+      ...companies,
       {
-        companyName: "Example Company",
-        address: "123 Example Street",
-        country: "Country",
-        state: "State",
-        city: "City",
-        industryType: "Industry Type",
-        contactPerson: "John Doe",
-        number: "1234567890",
-        email: "example@company.com",
-        designation: "Manager",
-        designationType: "Full-Time",
-        department: "HR",
+        companyName: "",
+        address: "",
+        gst: "",
+        country: "",
+        state: "",
+        city: "",
+        industryType: "",
+        contactPerson: "",
+        number: "",
+        email: "",
+        designation: "",
       },
-    ];
-    const worksheet = XLSX.utils.json_to_sheet(sampleData);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "SampleData");
-    XLSX.writeFile(workbook, "SampleData.xlsx");
+    ]);
+    setTimeout(() => {
+      inputRefs.current[companies.length]?.focus();
+    }, 0);
+  };
+
+  const handleFileUpload = (data) => {
+    setCompanies(data);
+  };
+
+  const handleSubmit = (e) => {
+    console.log("I was called");
+    e.preventDefault();
+    // if (companies.some((company) => !company.companyName || !company.email)) {
+    //   alert("Company Name and Email are required for all entries.");
+    //   return;
+    // }
+    onAddCompany(companies);
   };
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Company Page</h1>
-      <div className="bg-white p-6 rounded-lg shadow-lg">
-        <form>
-          <h2 className="text-xl font-semibold mb-4">Company Form</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {[
-              { label: "Company Name", name: "companyName" },
-              { label: "Address", name: "address" },
-              { label: "Country", name: "country" },
-              { label: "State", name: "state" },
-              { label: "City", name: "city" },
-              { label: "Industry Type", name: "industryType" },
-              { label: "Contact Person", name: "contactPerson" },
-              { label: "Number", name: "number", type: "tel" },
-              { label: "Email ID", name: "email", type: "email" },
-              { label: "Designation", name: "designation" },
-              { label: "Designation Type", name: "designationType" },
-              { label: "Department", name: "department" },
-            ].map((field) => (
-              <div key={field.name}>
-                <label className="block text-sm font-medium text-gray-700">
-                  {field.label}
-                </label>
-                <input
-                  type={field.type || "text"}
-                  name={field.name}
-                  value={newCompany[field.name]}
-                  onChange={handleInputChange}
-                  className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600"
-                  required
-                />
-              </div>
-            ))}
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75 z-50">
+      <div className="bg-white p-3 w-[90vw] rounded-lg shadow-lg max-h-[80vh] overflow-y-auto">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white p-4 rounded-lg w-full mx-auto"
+        >
+          <h2 className="text-2xl font-semibold text-indigo-600 mb-4">
+            Add Company
+          </h2>
+
+          <FileUpload onFileData={handleFileUpload}>
+            Import Customers from excel.
+          </FileUpload>
+
+          {/* Labels for all inputs */}
+          <div className="hidden sm:grid text-sm grid-cols-[repeat(11,_1fr),_20px] items-center gap-1 mb-2 text-gray-700 bg-blue-200 rounded-md font-medium py-1">
+            <span className="w-full pl-2">Company Name</span>
+            <span className="w-full">Address</span>
+            <span className="w-full">GST</span>
+            <span className="w-full">Country</span>
+            <span className="w-full">State</span>
+            <span className="w-full">City</span>
+            <span className="w-full">Industry</span>
+            <span className="w-full">Contact Person</span>
+            <span className="w-full">Designation</span>
+            <span className="w-full">Number</span>
+            <span className="w-full">Email</span>
+            <span className="w-fit h-0">
+              &nbsp; <span className="text-red-600 text-lg">&nbsp;</span>
+            </span>
           </div>
 
-          {/* File Upload */}
-          <div className="mt-4">
-            <label className="block text-sm font-medium text-gray-700">
-              Upload Excel File
-            </label>
-            <input
-              type="file"
-              accept=".xlsx"
-              onChange={handleFileUpload}
-              className="w-full mt-1"
-            />
-          </div>
+          {companies.map((company, index) => (
+            <div
+              key={index}
+              className="grid sm:grid-cols-[repeat(11,_1fr)_min-content] items-center gap-1 bg-gray-50 rounded-md shadow-sm mb-2"
+            >
+              <p className="w-full sm:hidden text-center py-1 bg-gray-300 rounded-md">
+                Company : {index + 1}
+              </p>
+              {[
+                { label: "Company Name", name: "companyName" },
+                { label: "Address", name: "address" },
+                { label: "GST", name: "gst" },
+                { label: "Country", name: "country" },
+                { label: "State", name: "state" },
+                { label: "City", name: "city" },
+                { label: "Industry Type", name: "industryType" },
+                { label: "Contact Person", name: "contactPerson" },
+                { label: "Designation", name: "designation" },
+                { label: "Number", name: "number" },
+                { label: "Email ID", name: "email" },
+              ].map((field, i) => (
+                <div key={i}>
+                  <input
+                    key={field.name}
+                    ref={
+                      field.name === "companyName"
+                        ? (el) => (inputRefs.current[index] = el)
+                        : null
+                    }
+                    type="text"
+                    required={field.required}
+                    placeholder={field.label + (field.required ? " *" : "")}
+                    value={company[field.name] || ""}
+                    onChange={(e) =>
+                      handleInputChange(index, field.name, e.target.value)
+                    }
+                    className="border text-sm border-gray-300 rounded-md p-1 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+              ))}
 
-          <div className="flex items-center mt-4">
+              <button
+                onClick={() => removeCompany(index)}
+                type="button"
+                className="py-1 px-2 sm:p-0 flex w-full sm:w-fit items-center justify-center gap-2 bg-red-600 sm:bg-transparent sm:text-red-600 rounded-md sm:hover:text-red-700 focus:outline-none"
+              >
+                <FaTrashAlt size={20} className=" text-white sm:text-inherit" />
+                <span className=" text-white sm:hidden">Delete</span>
+              </button>
+
+              {/* <button
+                onClick={() => removeCompany(index)}
+                className="!text-red-600 hover:text-red-800 font-bold !bg-transparent"
+              >
+                <FaTrashAlt size={20} />
+              </button> */}
+            </div>
+          ))}
+
+          <div className=" sticky bottom-0 flex justify-end mt-4 gap-2 sm:gap-4 items-center">
             <button
               type="button"
-              className="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-200"
-              onClick={handleAddCompany}
+              onClick={addCompany}
+              className="px-3 py-2 bg-blue-500 text-white rounded-sm hover:bg-blue-600"
             >
-              Add Company
+              <FaPlus size={16} />
             </button>
             <button
-              type="button"
-              className="ml-4 px-6 py-2 bg-gray-400 text-white rounded-md hover:bg-gray-500 transition duration-200"
-              onClick={handleSampleDownload}
+              type="submit"
+              className="!bg-indigo-600 text-white px-3 py-1 rounded-sm hover:bg-indigo-700"
             >
-              Download Sample Data
+              Submit
+            </button>
+            <button
+              onClick={closeModal}
+              className="!bg-gray-500 text-white px-3 py-1 rounded-sm hover:bg-gray-600"
+            >
+              Close
             </button>
           </div>
         </form>
-
-        {/* Display Companies */}
-        {companies.length > 0 && (
-          <div className="mt-8">
-            <h2 className="text-xl font-semibold mb-4">Added Companies</h2>
-            <table className="table-auto w-full border border-gray-300">
-              <thead>
-                <tr className="bg-gray-100">
-                  {Object.keys(companies[0]).map((key) => (
-                    <th
-                      key={key}
-                      className="px-4 py-2 border border-gray-300 text-left"
-                    >
-                      {key}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {companies.map((company, index) => (
-                  <tr key={index}>
-                    {Object.values(company).map((value, idx) => (
-                      <td
-                        key={idx}
-                        className="px-4 py-2 border border-gray-300"
-                      >
-                        {value}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
       </div>
     </div>
   );

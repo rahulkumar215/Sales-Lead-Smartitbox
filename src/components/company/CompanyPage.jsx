@@ -4,12 +4,18 @@ import ReactPaginate from "react-paginate";
 import "react-toastify/dist/ReactToastify.css";
 import { FaEdit, FaPlus, FaTrashAlt } from "react-icons/fa";
 import CompanyForm from "./CompanyForm";
+import ShortUniqueId from "short-unique-id";
+import EditCompanyForm from "./EditCompanyForm";
 
 const CompanyPage = () => {
+  const { randomUUID } = new ShortUniqueId({ length: 4 });
+
   const [companies, setCompanies] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [pageNumber, setPageNumber] = useState(0);
+  const [editCompany, setEditCompany] = useState({});
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [newCompany, setNewCompany] = useState({
     companyName: "",
     address: "",
@@ -25,32 +31,17 @@ const CompanyPage = () => {
     department: "",
   });
 
-  const generateUID = () => `company-${Math.floor(Math.random() * 1000000)}`;
-
-  const handleAddCompany = () => {
+  const handleAddCompany = (companies) => {
     // Validate that all fields are filled
-    if (Object.values(newCompany).some((field) => field.trim() === "")) {
-      toast.error("Please fill out all fields.");
-      return;
-    }
-
-    const newCompanyWithUID = { ...newCompany, uid: generateUID() };
-    setCompanies([...companies, newCompanyWithUID]);
-    toast.success("Company added successfully!");
-    setNewCompany({
-      companyName: "",
-      address: "",
-      country: "",
-      state: "",
-      city: "",
-      industryType: "",
-      contactPerson: "",
-      number: "",
-      emailID: "",
-      designation: "",
-      designationType: "",
-      department: "",
+    const newCompanies = companies.map((comp) => {
+      return {
+        uid: randomUUID(),
+        ...comp,
+      };
     });
+    setCompanies((prev) => [...prev, ...newCompanies]);
+    toast.success("Customer added successfully!");
+    setIsModalOpen(false);
   };
 
   const handleSearch = (e) => {
@@ -64,17 +55,27 @@ const CompanyPage = () => {
 
   const handleEditCompany = (uid) => {
     const companyToEdit = companies.find((company) => company.uid === uid);
-    setNewCompany(companyToEdit);
-    setIsModalOpen(true);
+    setEditCompany(companyToEdit);
+    setIsEditModalOpen(true);
   };
 
-  const filteredCompanies = companies.filter(
-    (company) =>
-      company.companyName.toLowerCase().includes(searchQuery) ||
-      company.emailID.toLowerCase().includes(searchQuery)
+  const saveEditedCompany = (data) => {
+    setCompanies((prev) =>
+      prev.map((comp) => (comp.uid === data.uid ? data : comp))
+    );
+    setIsEditModalOpen(false);
+    toast.success("Customer updated successfully!");
+  };
+
+  const filteredCompanies = companies.filter((company) =>
+    Object.values(company).some(
+      (value) =>
+        value &&
+        value.toString().toLowerCase().includes(searchQuery.toLowerCase())
+    )
   );
 
-  const companiesPerPage = 5;
+  const companiesPerPage = 15;
   const pageCount = Math.ceil(filteredCompanies.length / companiesPerPage);
   const displayCompanies = filteredCompanies.slice(
     pageNumber * companiesPerPage,
@@ -107,7 +108,23 @@ const CompanyPage = () => {
       </div>
 
       {/* Company Form (Modal-like) */}
-      {isModalOpen && <CompanyForm />}
+      {isModalOpen && (
+        <CompanyForm
+          onAddCompany={handleAddCompany}
+          closeModal={() => setIsModalOpen(false)}
+        />
+      )}
+
+      {isEditModalOpen && (
+        <EditCompanyForm
+          companyData={editCompany}
+          onEditCompany={saveEditedCompany}
+          onClose={() => {
+            setEditCompany("");
+            setIsEditModalOpen(false);
+          }}
+        />
+      )}
 
       {/* Company Table */}
       <div
@@ -120,6 +137,7 @@ const CompanyPage = () => {
               {[
                 "Company Name",
                 "Address",
+                "GST",
                 "Country",
                 "State",
                 "City",
@@ -128,11 +146,12 @@ const CompanyPage = () => {
                 "Number",
                 "Email ID",
                 "Designation",
-                "Designation Type",
-                "Department",
                 "Actions",
               ].map((header) => (
-                <th key={header} className="px-6 text-left font-medium text-sm">
+                <th
+                  key={header}
+                  className="px-6 py-1 text-left font-medium text-sm"
+                >
                   {header}
                 </th>
               ))}
@@ -152,19 +171,17 @@ const CompanyPage = () => {
               displayCompanies.map((company) => (
                 <tr key={company.uid} className="hover:bg-gray-50">
                   {[
-                    "uid",
                     "companyName",
                     "address",
+                    "gst",
                     "country",
                     "state",
                     "city",
                     "industryType",
                     "contactPerson",
                     "number",
-                    "emailID",
+                    "email",
                     "designation",
-                    "designationType",
-                    "department",
                   ].map((field) => (
                     <td key={field} className="px-3 py-2 text-sm">
                       {company[field]}
@@ -193,7 +210,7 @@ const CompanyPage = () => {
 
       {/* Pagination */}
       <div className="flex justify-between items-center mt-6">
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-gray-800 font-semibold">
           {filteredCompanies.length} entries found
         </p>
         <ReactPaginate
@@ -201,11 +218,21 @@ const CompanyPage = () => {
           pageRangeDisplayed={3}
           marginPagesDisplayed={1}
           onPageChange={handlePageChange}
-          containerClassName="flex space-x-2"
-          previousLabel="Prev"
-          nextLabel="Next"
-          activeClassName="bg-indigo-600 text-white px-2 rounded-md"
+          containerClassName="flex items-center space-x-2"
+          previousLabel={
+            <span className="px-2 py-1 bg-gray-200 text-gray-600  rounded-sm hover:bg-gray-300 transition-all">
+              Prev
+            </span>
+          }
+          nextLabel={
+            <span className="px-2 py-1 bg-gray-200 text-gray-600  rounded-sm hover:bg-gray-300 transition-all">
+              Next
+            </span>
+          }
+          activeClassName="bg-indigo-600 text-white font-semibold px-2 rounded-sm transition-all"
           disabledClassName="text-gray-400 cursor-not-allowed"
+          pageClassName="px-2 rounded-sm text-gray-600 hover:bg-indigo-100 hover:text-indigo-600 cursor-pointer transition-all"
+          breakClassName="text-gray-600"
         />
       </div>
     </div>

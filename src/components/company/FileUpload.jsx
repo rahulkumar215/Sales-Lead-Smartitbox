@@ -8,12 +8,47 @@ const FileUpload = ({ children, onFileData }) => {
   const [error, setError] = useState("");
 
   const handleDownload = () => {
-    // Sample data
+    // Sample data with the new fields
     const sampleData = [
-      ["Category", "Item Name", "Units", "Rate"], // Updated Header row
-      ["na", "Design Charge", "pcs", "100"], // Row 1
-      ["Flex", "Solvent Normal flex", "m", "50"], // Row 2
-      ["na", "Solvent Oneway Vision", "m", "75"], // Row 3
+      [
+        "Company Name",
+        "Address",
+        "GST",
+        "Country",
+        "State",
+        "City",
+        "Industry Type",
+        "Contact Person",
+        "Number",
+        "Email",
+        "Designation",
+      ], // Header row
+      [
+        "ABC Corp",
+        "123 Main St",
+        "22AAAAA0000A1Z5",
+        "India",
+        "Maharashtra",
+        "Mumbai",
+        "IT",
+        "John Doe",
+        "9876543210",
+        "john@example.com",
+        "Manager",
+      ], // Row 1
+      [
+        "XYZ Ltd",
+        "456 Elm St",
+        "27BBBBB1111B2Z6",
+        "India",
+        "Karnataka",
+        "Bangalore",
+        "Manufacturing",
+        "Jane Smith",
+        "8765432109",
+        "jane@example.com",
+        "CEO",
+      ], // Row 2
     ];
 
     // Create a worksheet and workbook
@@ -22,7 +57,7 @@ const FileUpload = ({ children, onFileData }) => {
     XLSX.utils.book_append_sheet(workbook, worksheet, "Sample Data");
 
     // Write the workbook and trigger download
-    XLSX.writeFile(workbook, "items_sample_data.xlsx");
+    XLSX.writeFile(workbook, "companies_sample_data.xlsx");
   };
 
   const handleFileChange = (event) => {
@@ -54,15 +89,27 @@ const FileUpload = ({ children, onFileData }) => {
       const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
       // Check if the first row contains valid headers
-      if (
-        jsonData[0] &&
-        (jsonData[0][0] !== "Category" ||
-          jsonData[0][1] !== "Item Name" ||
-          jsonData[0][2] !== "Units" ||
-          jsonData[0][3] !== "Rate")
-      ) {
+      const expectedHeaders = [
+        "Company Name",
+        "Address",
+        "GST",
+        "Country",
+        "State",
+        "City",
+        "Industry Type",
+        "Contact Person",
+        "Number",
+        "Email",
+        "Designation",
+      ];
+      const headersMatch =
+        JSON.stringify(jsonData[0]) === JSON.stringify(expectedHeaders);
+
+      if (!headersMatch) {
         setError(
-          "The uploaded Excel file must contain the columns in the order: Category, Item Name, Units, Rate."
+          `The uploaded Excel file must contain the following headers: ${expectedHeaders.join(
+            ", "
+          )}`
         );
         setFileName(file.name);
         return;
@@ -71,25 +118,30 @@ const FileUpload = ({ children, onFileData }) => {
       // Process data and skip the first row (header row)
       const processedData = jsonData.slice(1).map((row) => {
         return {
-          category: row[0] || "", // Ensure category is populated
-          itemName: row[1] || "", // Ensure itemName is populated
-          units: row[2] || "", // Ensure units is populated
-          rate: row[3] || "", // Ensure rate is populated
+          companyName: row[0] || "",
+          address: row[1] || "",
+          gst: row[2] || "",
+          country: row[3] || "",
+          state: row[4] || "",
+          city: row[5] || "",
+          industryType: row[6] || "",
+          contactPerson: row[7] || "",
+          number: row[8] || "",
+          email: row[9] || "",
+          designation: row[10] || "",
         };
       });
 
       // Validate the processed data structure
-      const invalidRows = processedData.some(
-        (row) =>
-          typeof row.category !== "string" ||
-          typeof row.itemName !== "string" ||
-          typeof row.units !== "string" ||
-          (row.rate && isNaN(parseFloat(row.rate)))
+      const invalidRows = processedData.some((row) =>
+        Object.values(row).some(
+          (value) => typeof value !== "string" && typeof value !== "number"
+        )
       );
 
       if (invalidRows) {
         setError(
-          "Invalid data format in file. Please ensure all rows have valid data."
+          "Invalid data format in file. Please ensure all columns have valid data."
         );
         setFileName(file.name);
       } else {
@@ -104,9 +156,9 @@ const FileUpload = ({ children, onFileData }) => {
   };
 
   return (
-    <div className="h-fit text-[1rem]  w-fit">
+    <div className="h-fit text-[1rem] mb-2">
       <h4 className="mb-2 text-black">{children}</h4>
-      <div className="flex flex-wrap w-full flex-col gap-2 rounded border border-black border-opacity-50 p-2">
+      <div className="flex flex-wrap w-full sm:w-fit flex-col gap-2 rounded border border-black border-opacity-50 p-2">
         <div className="flex flex-wrap items-center gap-4">
           <label className="cursor-pointer rounded bg-blue-500 px-2 py-1 text-white hover:bg-blue-600">
             Upload

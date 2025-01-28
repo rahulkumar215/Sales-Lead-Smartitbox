@@ -1110,7 +1110,7 @@ function QuotationPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 30;
+  const itemsPerPage = 15;
 
   const filteredQuotations = quotations.filter((quotation) =>
     Object.values(quotation)
