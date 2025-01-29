@@ -361,8 +361,6 @@ function LeadsPage() {
     setFollowUps((prev) => [...prev, data]);
   };
 
-  console.log(JSON.stringify(followUps));
-
   const handleDelete = (e, leadId) => {
     e.stopPropagation();
     const updatedLeads = combLeadDetails.filter(
@@ -487,7 +485,7 @@ function LeadsPage() {
 
       {/* Table Section */}
       <div
-        className="overflow-x-auto bg-white shadow-lg max-w-[100vw] rounded-lg"
+        className="overflow-x-auto bg-white shadow-lg max-w-[100vw] rounded-lg main-table"
         style={{ scrollbarWidth: "thin" }}
       >
         <table className="min-w-full table-auto">
