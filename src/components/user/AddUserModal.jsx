@@ -34,15 +34,13 @@ const AddUserModal = ({
   };
 
   return (
-    // <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4 sm:p-8">
-    //   <div className="bg-white  rounded-lg shadow-lg w-11/12 sm:w-1/2 max-h-[80vh] overflow-y-auto transition-transform transform">
     <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75 z-50">
       <div
         className="bg-white p-6 sm:w-1/2 w-11/12 rounded-lg max-h-[95vh] sm:max-h-[90vh] overflow-y-auto"
         style={{ scrollbarWidth: "thin" }}
       >
         <h2 className="text-xl font-semibold text-indigo-600 mb-3">
-          {newUser.uid ? "Edit User" : "Add User"}
+          {newUser._id ? "Edit User" : "Add User"}
         </h2>
         <form
           onSubmit={handleSubmit}
@@ -106,9 +104,9 @@ const AddUserModal = ({
             <input
               type="tel"
               name="mobile"
-              value={newUser.mobile}
+              value={newUser.mobileNo}
               onChange={(e) =>
-                setNewUser({ ...newUser, mobile: e.target.value })
+                setNewUser({ ...newUser, mobileNo: e.target.value })
               }
               className="w-full p-1 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600"
               required
@@ -141,9 +139,9 @@ const AddUserModal = ({
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
-                value={newUser.password}
+                value={newUser.pswd}
                 onChange={(e) =>
-                  setNewUser({ ...newUser, password: e.target.value })
+                  setNewUser({ ...newUser, pswd: e.target.value })
                 }
                 className="w-full p-1 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600"
                 required

@@ -1,13 +1,10 @@
 import {
   FaHome,
   FaBox,
-  FaCog,
   FaClipboard,
   FaUsers,
   FaFileAlt,
-  FaHeadset,
   FaSignOutAlt,
-  FaPlus,
 } from "react-icons/fa";
 import { MdLeaderboard } from "react-icons/md";
 import { useNavigate } from "react-router-dom";

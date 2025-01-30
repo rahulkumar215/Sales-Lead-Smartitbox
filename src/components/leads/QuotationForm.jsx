@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import ShortUniqueId from "short-unique-id";
 import ItemsInput from "./ItemsInput";
+import PivotTable from "./PivotTable";
 
 const newItem = {
   category: "",
@@ -14,29 +15,34 @@ const newItem = {
   subtotal: "",
 };
 
+// export default PivotTable;
+
 function QuotationForm({ items, setItems }) {
   const [itemList, setItemList] = useState([]);
-  const [isInterState, setIsInterState] = useState(true);
+  const [isInterState, setIsInterState] = useState(false);
   const { randomUUID } = new ShortUniqueId({ length: 4 });
 
   const handleAddItem = () => {
     setItems([...items, newItem]);
   };
 
-  console.log(items);
-
   const handleItemChange = (index, e) => {
     const { name, value } = e.target;
     console.log(index, name, value);
-    const updatedItems = [...items];
-    updatedItems[index][name] = value;
 
-    if (name === "qty" || name === "rate") {
-      updatedItems[index].subtotal =
-        Number(updatedItems[index].qty) * Number(updatedItems[index].rate);
-    }
-
-    setItems(updatedItems);
+    setItems((prevItems) =>
+      prevItems.map((item, i) =>
+        i === index
+          ? {
+              ...item,
+              [name]: value,
+              ...(name === "category"
+                ? { id: "", rate: "", units: "", name: "" }
+                : {}),
+            }
+          : item
+      )
+    );
   };
 
   const handleDeleteItem = (index) => {
@@ -67,59 +73,25 @@ function QuotationForm({ items, setItems }) {
 
       {/* Labels for all inputs */}
       <div
-        className={`hidden text-sm sm:grid grid-rows-1 ${
-          isInterState
-            ? "grid-cols-[repeat(12,_1fr),_minmax(20px,_max-content)]"
-            : "grid-cols-[repeat(13,_1fr),_minmax(20px,_max-content)]"
-        } gap-1 mb-2 text-gray-700 bg-blue-200 rounded-md font-medium`}
+        className={`hidden text-sm sm:grid grid-rows-1 "
+        grid-cols-[repeat(14,_1fr),_minmax(20px,_max-content)] gap-1 mb-2 text-gray-700 bg-blue-200 rounded-md font-medium`}
       >
-        <span className="w-full pl-1">
-          Category <span className="text-red-600 text-lg">*</span>
-        </span>
-        <span className="w-full">
-          Item Name <span className="text-red-600 text-lg">*</span>
-        </span>
-        <span className="w-full">
-          Id <span className="text-red-600 text-lg">*</span>
-        </span>
-        <span className="w-full">
-          Qty. <span className="text-red-600 text-lg">*</span>
-        </span>
-        <span className="w-full">
-          Units <span className="text-red-600 text-lg">*</span>
-        </span>
-        <span className="w-full">
-          Rate <span className="text-red-600 text-lg">*</span>
-        </span>
-        <span className="w-full">
-          Subtotal <span className="text-red-600 text-lg">*</span>
-        </span>
-        <span className="w-full">
-          Discount (%) <span className="text-red-600 text-lg">*</span>
-        </span>
-        <span className="w-full">
-          Taxable Amount <span className="text-red-600 text-lg">*</span>
-        </span>
-        <span className="w-full">
-          GST Slab <span className="text-red-600 text-lg">*</span>
-        </span>
-        {isInterState ? (
-          <span className="w-full">
-            IGST <span className="text-red-600 text-lg">*</span>
-          </span>
-        ) : (
-          <>
-            <span className="w-full">
-              SGST <span className="text-red-600 text-lg">*</span>
-            </span>
-            <span className="w-full">
-              CGST <span className="text-red-600 text-lg">*</span>
-            </span>
-          </>
-        )}
-        <span className="w-full">
-          Total <span className="text-red-600 text-lg">*</span>
-        </span>
+        <span className="w-full pl-1">Category</span>
+        <span className="w-full">Item Name</span>
+        <span className="w-full">Id</span>
+        <span className="w-full">Qty.</span>
+        <span className="w-full">Units</span>
+        <span className="w-full">Rate</span>
+        <span className="w-full">Subtotal</span>
+        <span className="w-full">Discount (%)</span>
+        <span className="w-full">Taxable Amount</span>
+        <span className="w-full">GST Slab</span>
+        <span className="w-full">IGST</span>
+        <>
+          <span className="w-full">SGST</span>
+          <span className="w-full">CGST</span>
+        </>
+        <span className="w-full">Total</span>
         <span className="w-full h-0">&nbsp;</span>
       </div>
 
@@ -137,17 +109,19 @@ function QuotationForm({ items, setItems }) {
       ))}
 
       {/* Add Item Button and Total Summary */}
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-start">
         <button
           onClick={handleAddItem}
           type="button"
-          className="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 focus:outline-none"
+          className="px-4 py-2 w-full sm:w-fit  mt-4 bg-teal-600 text-white rounded-md hover:bg-teal-700 focus:outline-none"
         >
           Add Item
         </button>
 
+        <PivotTable items={items} isInterState={isInterState} />
+
         {/* Total Summary Section */}
-        <div className="border mt-4  rounded-lg  ">
+        <div className="border mt-4 w-full sm:w-fit rounded-lg  ">
           <table className="w-full border-collapse ">
             <tbody>
               <tr className="border border-blue-300">
@@ -155,6 +129,7 @@ function QuotationForm({ items, setItems }) {
                   Total Amount
                 </td>
                 <td className="px-3 py-1 bg-gray-100 font-semibold text-left">
+                  ₹
                   {items
                     .reduce(
                       (acc, item) =>
@@ -164,59 +139,64 @@ function QuotationForm({ items, setItems }) {
                     .toFixed(2)}
                 </td>
               </tr>
-              {isInterState ? (
-                <tr className="border border-blue-300">
-                  <td className="px-3 py-1 font-semibold border-r border-blue-300 bg-blue-200">
-                    IGST Total
-                  </td>
-                  <td className="px-3 py-1 bg-gray-100 font-semibold text-left">
-                    {items
-                      .reduce((acc, item) => {
-                        const taxable =
-                          item.qty * item.rate * (1 - item.discount / 100);
-                        return acc + (taxable * item.gstSlab) / 100;
-                      }, 0)
-                      .toFixed(2)}
-                  </td>
-                </tr>
-              ) : (
-                <>
-                  <tr className="border border-blue-300">
-                    <td className="px-3 py-1 font-semibold border-r border-blue-300 bg-blue-200">
-                      SGST Total
-                    </td>
-                    <td className="px-3 py-1 bg-gray-100 font-semibold text-left">
-                      {items
+              <tr className="border border-blue-300">
+                <td className="px-3 py-1 font-semibold border-r border-blue-300 bg-blue-200">
+                  IGST Total
+                </td>
+                <td className="px-3 py-1 bg-gray-100 font-semibold text-left">
+                  ₹
+                  {isInterState
+                    ? items
+                        .reduce((acc, item) => {
+                          const taxable =
+                            item.qty * item.rate * (1 - item.discount / 100);
+                          return acc + (taxable * item.gstSlab) / 100;
+                        }, 0)
+                        .toFixed(2)
+                    : "0.00"}
+                </td>
+              </tr>
+              <tr className="border border-blue-300">
+                <td className="px-3 py-1 font-semibold border-r border-blue-300 bg-blue-200">
+                  SGST Total
+                </td>
+                <td className="px-3 py-1 bg-gray-100 font-semibold text-left">
+                  ₹
+                  {isInterState
+                    ? "0.00"
+                    : items
                         .reduce((acc, item) => {
                           const taxable =
                             item.qty * item.rate * (1 - item.discount / 100);
                           return acc + (taxable * item.gstSlab) / 200;
                         }, 0)
                         .toFixed(2)}
-                    </td>
-                  </tr>
-                  <tr className="border border-blue-300">
-                    <td className="px-3 py-1 font-semibold border-r border-blue-300 bg-blue-200">
-                      CGST Total
-                    </td>
-                    <td className="px-3 py-1 bg-gray-100 font-semibold text-left">
-                      {items
+                </td>
+              </tr>
+              <tr className="border border-blue-300">
+                <td className="px-3 py-1 font-semibold border-r border-blue-300 bg-blue-200">
+                  CGST Total
+                </td>
+                <td className="px-3 py-1 bg-gray-100 font-semibold text-left">
+                  ₹
+                  {isInterState
+                    ? "0.00"
+                    : items
                         .reduce((acc, item) => {
                           const taxable =
                             item.qty * item.rate * (1 - item.discount / 100);
                           return acc + (taxable * item.gstSlab) / 200;
                         }, 0)
                         .toFixed(2)}
-                    </td>
-                  </tr>
-                </>
-              )}
+                </td>
+              </tr>
 
               <tr className="border border-blue-300">
                 <td className="px-3 py-1 font-semibold border-r border-blue-300 bg-blue-200">
                   Grand Total
                 </td>
                 <td className="px-3 py-1 bg-gray-100 font-semibold text-left">
+                  ₹
                   {items
                     .reduce((acc, item) => {
                       const taxable =

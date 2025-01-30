@@ -7,7 +7,7 @@ export const generatePDF = (
   user = "Rahul",
   quoteId = "Q/24-25/001"
 ) => {
-  const doc = new jsPDF();
+  const doc = new jsPDF("l");
 
   // Add Logo to the top-right corner
   const img = new Image();
@@ -95,44 +95,132 @@ export const generatePDF = (
     const dividerY = 70; // Position for the divider line
 
     // Prepare item data for table
-    const itemData = itemDetails.map((item, i) => [
-      i + 1,
-      item.category,
-      item.name,
-      parseFloat(item.qty).toFixed(2),
-      parseFloat(item.price).toFixed(2),
-      parseFloat(item.total).toFixed(2),
-    ]);
+    let totalTaxable = 0,
+      totalIGST = 0,
+      totalSGST = 0,
+      totalCGST = 0;
+    const gstSummary = {};
 
-    // Add Item Details Table with light borders
-    doc.autoTable({
-      startY: dividerY + 10,
-      head: [["S. No.", "Category", "Name", "Quantity", "Price", "Total"]],
-      body: itemData,
-      headStyles: {
-        fillColor: [200, 220, 255], // Light color for the table header
-        textColor: [0, 0, 0], // Black text for headers
-        fontSize: 10,
-      },
-      styles: {
-        fontSize: 10,
-        cellPadding: 2,
-        valign: "middle",
-        lineWidth: 0.3, // Light border width
-        lineColor: [200, 200, 200], // Light gray border color
-      },
+    const itemData = itemDetails.map((item, i) => {
+      const subtotal = item.rate * item.qty;
+      const taxableAmount = subtotal - item.discount;
+      const igst = customerDetails.interState
+        ? taxableAmount * (item.gstSlab / 100)
+        : 0;
+      const sgst = customerDetails.interState
+        ? 0
+        : taxableAmount * (item.gstSlab / 200);
+      const cgst = customerDetails.interState
+        ? 0
+        : taxableAmount * (item.gstSlab / 200);
+      const total = taxableAmount + igst + sgst + cgst;
+
+      totalTaxable += taxableAmount;
+      totalIGST += igst;
+      totalSGST += sgst;
+      totalCGST += cgst;
+
+      gstSummary[item.gstSlab] = gstSummary[item.gstSlab] || {
+        IGST: 0,
+        SGST: 0,
+        CGST: 0,
+      };
+      gstSummary[item.gstSlab].IGST += igst;
+      gstSummary[item.gstSlab].SGST += sgst;
+      gstSummary[item.gstSlab].CGST += cgst;
+
+      return [
+        i + 1,
+        item.category,
+        item.name,
+        item.id,
+        item.units,
+        item.rate.toFixed(2),
+        subtotal.toFixed(2),
+        item.discount,
+        taxableAmount.toFixed(2),
+        item.gstSlab,
+        igst.toFixed(2),
+        sgst.toFixed(2),
+        cgst.toFixed(2),
+        total.toFixed(2),
+      ];
     });
 
-    // Add Quotation Total at the bottom-right corner (Red and Bold)
-    const total = itemDetails.reduce((acc, item) => acc + item.total, 0);
-    doc.setFontSize(12);
-    doc.setFont("helvetica", "bold");
+    doc.autoTable({
+      startY: 80,
+      head: [
+        [
+          "S. No.",
+          "Category",
+          "Item Name",
+          "Id",
+          "Units",
+          "Rate",
+          "Subtotal",
+          "Discount",
+          "Taxable Amount",
+          "GST Slab",
+          "IGST",
+          "SGST",
+          "CGST",
+          "Total",
+        ],
+      ],
+      body: itemData,
+      styles: { fontSize: 10, cellPadding: 2, valign: "middle" },
+    });
+
+    const summaryY = doc.lastAutoTable.finalY + 10;
+
+    if (summaryY + 80 > 280) {
+      doc.addPage("", "l");
+    }
+
+    // GST Summary Table
+    doc.autoTable({
+      startY: summaryY,
+      head: [["GST Slab", "IGST", "SGST", "CGST"]],
+      body: Object.entries(gstSummary).map(([slab, values]) => [
+        `${slab}%`,
+        values.IGST.toFixed(2),
+        values.SGST.toFixed(2),
+        values.CGST.toFixed(2),
+      ]),
+      styles: { fontSize: 10 },
+    });
+
+    const y = doc.lastAutoTable.finalY + 10;
+
+    if (y + 80 > 280) {
+      doc.addPage("", "l");
+    }
+
     doc.setTextColor(255, 0, 0); // Red color
-    doc.text(`Total: ${total.toFixed(2)}`, 150, doc.lastAutoTable.finalY + 10); // Positioned at the bottom-right
+    // Summary Section
+    doc.text(`Total Amount : ${totalTaxable.toFixed(2)}`, 230, y);
+    doc.text(`IGST             : ${totalIGST.toFixed(2)}`, 230, y + 5);
+    doc.text(`SGST           : ${totalSGST.toFixed(2)}`, 230, y + 10);
+    doc.text(`CGST           : ${totalCGST.toFixed(2)}`, 230, y + 15);
+    doc.text(
+      `Grand Total  : ${(
+        totalTaxable +
+        totalIGST +
+        totalSGST +
+        totalCGST
+      ).toFixed(2)}`,
+      230,
+      y + 20
+    );
 
     // Add Authorized Signatory at the bottom-right corner
-    const signatoryY = doc.lastAutoTable.finalY + 40; // Positioning after the total amount
-    const signatoryX = 130; // Align to the right (X position)
+    const signatoryY = doc.lastAutoTable.finalY + 50; // Positioning after the total amount
+
+    if (signatoryY + 80 > 280) {
+      doc.addPage("", "l");
+    }
+
+    const signatoryX = 220; // Align to the right (X position)
     doc.setFontSize(12);
     doc.setTextColor(0, 0, 0);
     doc.setFont("helvetica", "normal");

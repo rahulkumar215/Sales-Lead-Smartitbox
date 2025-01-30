@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   FaEdit,
   FaHistory,
@@ -14,6 +14,7 @@ import { IoMail } from "react-icons/io5";
 import { CiEdit } from "react-icons/ci";
 import TakeFollowUpForm from "./TakeFollowUpForm";
 import FollowUpHistory from "./FollowUpHistory";
+import PivotTable from "./PivotTable";
 
 const userInfo = {
   uid: "UID-Infini8",
@@ -21,7 +22,7 @@ const userInfo = {
   mobile: "9319444628",
   email: "rk83029014@gmail.com",
   designation: "sales",
-  department: "executiveadmin",
+  department: "admin",
   username: "Infini8",
   password: "415263",
 };
@@ -31,6 +32,7 @@ const dummyLeads = [
     leadDetails: {
       name: "Company A",
       id: 1,
+      gst: "7WZCAO0239I7Z3",
       address: "r z c-56",
       countryCode: "IN",
       country: "India",
@@ -44,279 +46,34 @@ const dummyLeads = [
       email: "rk83029014@gmail.com",
       designation: "MD",
       enquiryType: "Hot",
-      timestamp: "24/01/2025, 4:31 pm",
-      assignedToId: "UID-Infini8",
+      timestamp: "30/01/2025, 4:12 pm",
       assignedTo: "Rahul",
       leadType: "CRR",
-      punchedById: "UID-Infini8",
       punchedBy: "Kashif",
-      status: "In-Process",
-      leadId: "L-001",
-    },
-    itemDetails: [
-      {
-        category: "Electronics",
-        name: "Phone",
-        qty: "1",
-        price: "12",
-        total: 12,
-      },
-    ],
-  },
-  {
-    leadDetails: {
-      name: "Company A",
-      id: 1,
-      address: "r z c-56",
-      countryCode: "IN",
-      country: "India",
-      stateCode: "DL",
-      state: "Delhi",
-      city: "New Delhi",
-      leadSource: "IndiaMart",
-      industryType: "Chemicals",
-      contactPerson: "Rahul",
-      number: "9319444628",
-      email: "rk83029014@gmail.com",
-      designation: "MD",
-      enquiryType: "Hot",
-      timestamp: "24/01/2025, 4:37 pm",
-      assignedToId: "UID-Infini8",
-      assignedTo: "Rahul",
-      leadType: "CRR",
-      punchedById: "UID-005",
-      punchedBy: "Kashif",
-      status: "Won",
-      leadId: "L-002",
-    },
-    itemDetails: [
-      {
-        category: "Furniture",
-        name: "Chair",
-        qty: "1",
-        price: "100",
-        total: 100,
-      },
-      {
-        category: "Furniture",
-        name: "Table",
-        qty: "2",
-        price: "200",
-        total: 400,
-      },
-      {
-        category: "Electronics",
-        name: "Tablet",
-        qty: "3",
-        price: "300",
-        total: 900,
-      },
-      {
-        category: "Stationery",
-        name: "Pen",
-        qty: "4",
-        price: "400",
-        total: 1600,
-      },
-      {
-        category: "Furniture",
-        name: "Chair",
-        qty: "5",
-        price: "500",
-        total: 2500,
-      },
-    ],
-  },
-  {
-    leadDetails: {
-      name: "Company B",
-      id: 2,
-      address: "45-B, Industrial Area",
-      countryCode: "US",
-      country: "United States",
-      stateCode: "CA",
-      state: "California",
-      city: "Los Angeles",
-      leadSource: "LinkedIn",
-      industryType: "Technology",
-      contactPerson: "Alice Johnson",
-      number: "9876543210",
-      email: "alice.j@example.com",
-      designation: "CEO",
-      enquiryType: "Warm",
-      timestamp: "24/01/2025, 5:00 pm",
-      assignedToId: "UID-003",
-      assignedTo: "John",
-      leadType: "NBD",
-      punchedById: "UID-005",
-      punchedBy: "Emily",
-      status: "Lost",
-      leadId: "L-003",
-    },
-    itemDetails: [
-      {
-        category: "Software",
-        name: "CRM Tool",
-        qty: "1",
-        price: "500",
-        total: 500,
-      },
-      {
-        category: "Services",
-        name: "Consulting",
-        qty: "1",
-        price: "1500",
-        total: 1500,
-      },
-    ],
-  },
-  {
-    leadDetails: {
-      name: "Company C",
-      id: 3,
-      address: "12 Park Avenue",
-      countryCode: "AU",
-      country: "Australia",
-      stateCode: "NSW",
-      state: "New South Wales",
-      city: "Sydney",
-      leadSource: "Google Ads",
-      industryType: "Healthcare",
-      contactPerson: "Michael Green",
-      number: "9123456789",
-      email: "michael.g@example.com",
-      designation: "Manager",
-      enquiryType: "Cold",
-      timestamp: "24/01/2025, 5:15 pm",
-      assignedToId: "UID-004",
-      assignedTo: "Sophia",
-      leadType: "NBD",
-      punchedById: "UID-005",
-      punchedBy: "Mark",
       status: "Pending",
-      leadId: "L-004",
+      leadId: "L-001",
+      interState: false,
     },
     itemDetails: [
       {
-        category: "Medical Supplies",
-        name: "Surgical Gloves",
-        qty: "50",
-        price: "5",
-        total: 250,
-      },
-      {
-        category: "Medical Supplies",
-        name: "Face Masks",
-        qty: "100",
-        price: "2",
-        total: 200,
-      },
-      {
-        category: "Medical Equipment",
-        name: "ECG Machine",
-        qty: "1",
-        price: "1500",
-        total: 1500,
+        category: "Flex",
+        name: "Flex item 2",
+        id: "3",
+        units: "Nos",
+        qty: "10",
+        rate: 53,
+        discount: "20",
+        gstSlab: "18",
       },
     ],
-  },
-  {
-    leadDetails: {
-      name: "Company D",
-      id: 4,
-      address: "88 Main Street",
-      countryCode: "UK",
-      country: "United Kingdom",
-      stateCode: "LND",
-      state: "London",
-      city: "London",
-      leadSource: "Facebook",
-      industryType: "Retail",
-      contactPerson: "Emma Brown",
-      number: "8754693210",
-      email: "emma.b@example.com",
-      designation: "Director",
-      enquiryType: "Hot",
-      timestamp: "24/01/2025, 5:45 pm",
-      assignedToId: "UID-005",
-      assignedTo: "Liam",
-      leadType: "CRR",
-      punchedById: "UID-005",
-      punchedBy: "Noah",
-      status: "Converted",
-      leadId: "L-005",
-    },
-    itemDetails: [
-      {
-        category: "Apparel",
-        name: "T-Shirt",
-        qty: "20",
-        price: "10",
-        total: 200,
-      },
-      {
-        category: "Apparel",
-        name: "Jeans",
-        qty: "15",
-        price: "25",
-        total: 375,
-      },
-      {
-        category: "Accessories",
-        name: "Belts",
-        qty: "30",
-        price: "5",
-        total: 150,
-      },
-    ],
-  },
-  {
-    leadDetails: {
-      name: "Company B",
-      id: 3,
-      address: "45 Elm Street",
-      countryCode: "US",
-      country: "United States",
-      stateCode: "NY",
-      state: "New York",
-      city: "New York City",
-      leadSource: "Trade Show",
-      industryType: "Technology",
-      contactPerson: "Alice Johnson",
-      number: "9876543210",
-      email: "alice.johnson@example.com",
-      designation: "CTO",
-      enquiryType: "Warm",
-      timestamp: "24/01/2025, 6:00 pm",
-      assignedToId: "UID-Infini8",
-      assignedTo: "Michael",
-      leadType: "NBD",
-      punchedById: "UID-001",
-      punchedBy: "Sophia",
-      status: "Lost",
-      leadId: "L-003",
-    },
-    itemDetails: Array.from({ length: 25 }, (_, i) => ({
-      category: "Category " + (i + 1),
-      name: "Item " + (i + 1),
-      qty: (i + 1).toString(),
-      price: (i + 1) * 10,
-      total: (i + 1) * 10,
-    })),
   },
 ];
 
 function LeadsPage() {
-  const [leads, setLeads] = useState([]);
-  const [items, setItems] = useState([]);
+  // const [leads, setLeads] = useState([]);
+  // const [items, setItems] = useState([]);
   const [followUps, setFollowUps] = useState([]);
-  const [combLeadDetails, setCombLeadDetails] = useState(
-    userInfo.department === "admin"
-      ? dummyLeads
-      : dummyLeads.filter(
-          (lead) => lead.leadDetails.assignedToId === userInfo.uid
-        )
-  );
+  const [combLeadDetails, setCombLeadDetails] = useState([]);
   const [leadToEdit, setLeadToEdit] = useState("");
   const [newLeadId, setNewLeadId] = useState(
     `L-00${combLeadDetails.length + 1}`
@@ -347,6 +104,8 @@ function LeadsPage() {
   const handlePageChange = (data) => {
     setCurrentPage(data.selected);
   };
+
+  console.log(JSON.stringify(combLeadDetails));
 
   // Slice the items based on the current page
   const paginatedLeads = filteredLeads.slice(
@@ -383,6 +142,7 @@ function LeadsPage() {
         leadDetails: { ...lead }, // Update lead details
         itemDetails: items, // Update item details
       };
+      console.log(updatedLeads);
       setCombLeadDetails(updatedLeads);
     } else {
       // Lead does not exist: add it as a new entry
@@ -391,6 +151,7 @@ function LeadsPage() {
         itemDetails: items,
       };
 
+      console.log(newLeadEntry);
       const newCombLeadDetails = [...combLeadDetails, newLeadEntry];
 
       setNewLeadId(`L-00${newCombLeadDetails.length + 1}`);
@@ -423,6 +184,7 @@ function LeadsPage() {
   //   setCombLeadDetails(allLeads);
   // };
 
+  // reset the setLeadToEdit and setNewLeadId when lead is edited or modal is closed Todo
   const handleEditLead = (e, leadId) => {
     e.stopPropagation();
     setLeadToEdit(
@@ -431,6 +193,16 @@ function LeadsPage() {
     setIsModalOpen(true);
     setNewLeadId(leadId);
   };
+
+  useEffect(() => {
+    setCombLeadDetails(
+      userInfo.department === "admin"
+        ? dummyLeads
+        : dummyLeads.filter(
+            (lead) => lead.leadDetails.assignedToId === userInfo.uid
+          )
+    );
+  }, []);
 
   return (
     <div className="min-h-screen p-3">
@@ -664,6 +436,9 @@ function LeadsPage() {
                                 <strong>Industry Type:</strong>{" "}
                                 {lead.leadDetails.industryType}
                               </p>
+                              <p>
+                                <strong>GST No.:</strong> {lead.leadDetails.gst}
+                              </p>
                               <div className="grid grid-cols-2 gap-2 mt-2">
                                 <button
                                   className="bg-teal-600 flex gap-2 justify-center items-center hover:bg-teal-700 py-2 px-4 rounded-md text-white "
@@ -705,10 +480,34 @@ function LeadsPage() {
                                     Name
                                   </th>
                                   <th className="px-2 py-1 border border-gray-300 text-left text-sm font-medium text-gray-600">
-                                    Quantity
+                                    Id
                                   </th>
                                   <th className="px-2 py-1 border border-gray-300 text-left text-sm font-medium text-gray-600">
-                                    Price
+                                    Qty.
+                                  </th>
+                                  <th className="px-2 py-1 border border-gray-300 text-left text-sm font-medium text-gray-600">
+                                    Rate
+                                  </th>
+                                  <th className="px-2 py-1 border border-gray-300 text-left text-sm font-medium text-gray-600">
+                                    Subtotal
+                                  </th>
+                                  <th className="px-2 py-1 border border-gray-300 text-left text-sm font-medium text-gray-600">
+                                    Discount
+                                  </th>
+                                  <th className="px-2 py-1 border border-gray-300 text-left text-sm font-medium text-gray-600">
+                                    Taxable Amount
+                                  </th>
+                                  <th className="px-2 py-1 border border-gray-300 text-left text-sm font-medium text-gray-600">
+                                    GST Slab
+                                  </th>
+                                  <th className="px-2 py-1 border border-gray-300 text-left text-sm font-medium text-gray-600">
+                                    IGST
+                                  </th>
+                                  <th className="px-2 py-1 border border-gray-300 text-left text-sm font-medium text-gray-600">
+                                    SGST
+                                  </th>
+                                  <th className="px-2 py-1 border border-gray-300 text-left text-sm font-medium text-gray-600">
+                                    IGST
                                   </th>
                                   <th className="px-2 py-1 border border-gray-300 text-left text-sm font-medium text-gray-600">
                                     Total
@@ -737,36 +536,221 @@ function LeadsPage() {
                                         {item.name}
                                       </td>
                                       <td className="px-2 py-1 border border-gray-300 text-sm">
+                                        {item.id}
+                                      </td>
+                                      <td className="px-2 py-1 border border-gray-300 text-sm">
                                         {parseFloat(item.qty).toFixed(2)}
                                       </td>
                                       <td className="px-2 py-1 border border-gray-300 text-sm">
-                                        ₹{parseFloat(item.price).toFixed(2)}
+                                        ₹{parseFloat(item.rate).toFixed(2)}
                                       </td>
                                       <td className="px-2 py-1 border border-gray-300 text-sm">
-                                        ₹{parseFloat(item.total).toFixed(2)}
+                                        ₹
+                                        {parseFloat(
+                                          item.qty * item.rate
+                                        ).toFixed(2)}
+                                      </td>
+                                      <td className="px-2 py-1 border border-gray-300 text-sm">
+                                        {item.discount}%
+                                      </td>
+                                      <td className="px-2 py-1 border border-gray-300 text-sm">
+                                        ₹
+                                        {parseFloat(
+                                          item.qty *
+                                            item.rate *
+                                            (1 - item.discount / 100)
+                                        ).toFixed(2)}
+                                      </td>
+                                      <td className="px-2 py-1 border border-gray-300 text-sm">
+                                        {item.gstSlab}%
+                                      </td>
+                                      <td className="px-2 py-1 border border-gray-300 text-sm">
+                                        ₹
+                                        {lead.leadDetails.interState
+                                          ? parseFloat(
+                                              item.qty *
+                                                item.rate *
+                                                (1 - item.discount / 100) *
+                                                (item.gstSlab / 100)
+                                            ).toFixed(2)
+                                          : "0.00"}
+                                      </td>
+                                      <td className="px-2 py-1 border border-gray-300 text-sm">
+                                        ₹
+                                        {lead.leadDetails.interState
+                                          ? "0.00"
+                                          : parseFloat(
+                                              item.qty *
+                                                item.rate *
+                                                (1 - item.discount / 100) *
+                                                (item.gstSlab / 200)
+                                            ).toFixed(2)}
+                                      </td>
+                                      <td className="px-2 py-1 border border-gray-300 text-sm">
+                                        ₹
+                                        {lead.leadDetails.interState
+                                          ? "0.00"
+                                          : parseFloat(
+                                              item.qty *
+                                                item.rate *
+                                                (1 - item.discount / 100) *
+                                                (item.gstSlab / 200)
+                                            ).toFixed(2)}
+                                      </td>
+
+                                      <td className="px-2 py-1 border border-gray-300 text-sm">
+                                        ₹
+                                        {parseFloat(
+                                          item.qty *
+                                            item.rate *
+                                            (1 - item.discount / 100) *
+                                            (1 +
+                                              (lead.leadDetails.interState
+                                                ? item.gstSlab / 100
+                                                : item.gstSlab / 100))
+                                        ).toFixed(2)}
                                       </td>
                                     </tr>
                                   ))
                                 )}
                               </tbody>
                               {lead.itemDetails.length > 0 && (
-                                <tfoot>
-                                  <tr className="bg-blue-100 !border-none text-red-700 font-bold">
-                                    <th
-                                      colSpan="4"
-                                      className="px-2 py-3 !border-none text-right  font-semibold"
-                                    >
-                                      Total Value:
-                                    </th>
-                                    <th className="px-2 py-1 !border-none text-left  font-semibold">
-                                      ₹
-                                      {lead.itemDetails
-                                        .reduce(
-                                          (sum, item) => sum + item.total,
-                                          0
-                                        )
-                                        .toFixed(2)}
-                                    </th>
+                                <tfoot className="">
+                                  <tr>
+                                    <td colSpan={12}>
+                                      <PivotTable
+                                        items={lead.itemDetails}
+                                        isInterState={
+                                          lead.leadDetails.interState
+                                        }
+                                        className="max-w-[30rem] sm:w-fit border border-gray-400"
+                                      />
+                                    </td>
+                                    <td>
+                                      <tr className="text-red-600">
+                                        <td
+                                          colSpan={12}
+                                          className="px-1 text-right font-semibold"
+                                        >
+                                          Total Amount
+                                        </td>
+                                        <td className="px-1 font-semibold">
+                                          ₹
+                                          {lead.itemDetails
+                                            .reduce(
+                                              (acc, item) =>
+                                                acc +
+                                                item.qty *
+                                                  item.rate *
+                                                  (1 - item.discount / 100),
+                                              0
+                                            )
+                                            .toFixed(2)}
+                                        </td>
+                                      </tr>
+                                      <tr className="text-red-600">
+                                        <td
+                                          colSpan={12}
+                                          className="px-1 text-right font-semibold"
+                                        >
+                                          IGST
+                                        </td>
+                                        <td className="px-1 font-semibold">
+                                          ₹
+                                          {lead.leadDetails.interState
+                                            ? lead.itemDetails
+                                                .reduce((acc, item) => {
+                                                  const taxable =
+                                                    item.qty *
+                                                    item.rate *
+                                                    (1 - item.discount / 100);
+                                                  return (
+                                                    acc +
+                                                    (taxable * item.gstSlab) /
+                                                      100
+                                                  );
+                                                }, 0)
+                                                .toFixed(2)
+                                            : "0.00"}
+                                        </td>
+                                      </tr>
+                                      <tr className="text-red-600">
+                                        <td
+                                          colSpan={12}
+                                          className="px-1 text-right font-semibold"
+                                        >
+                                          SGST
+                                        </td>
+                                        <td className="px-1 font-semibold">
+                                          ₹
+                                          {lead.leadDetails.interState
+                                            ? "0.00"
+                                            : lead.itemDetails
+                                                .reduce((acc, item) => {
+                                                  const taxable =
+                                                    item.qty *
+                                                    item.rate *
+                                                    (1 - item.discount / 100);
+                                                  return (
+                                                    acc +
+                                                    (taxable * item.gstSlab) /
+                                                      200
+                                                  );
+                                                }, 0)
+                                                .toFixed(2)}
+                                        </td>
+                                      </tr>
+                                      <tr className="text-red-600">
+                                        <td
+                                          colSpan={12}
+                                          className="px-1 text-right font-semibold"
+                                        >
+                                          CGST
+                                        </td>
+                                        <td className="px-1 font-semibold">
+                                          ₹
+                                          {lead.leadDetails.interState
+                                            ? "0.00"
+                                            : lead.itemDetails
+                                                .reduce((acc, item) => {
+                                                  const taxable =
+                                                    item.qty *
+                                                    item.rate *
+                                                    (1 - item.discount / 100);
+                                                  return (
+                                                    acc +
+                                                    (taxable * item.gstSlab) /
+                                                      200
+                                                  );
+                                                }, 0)
+                                                .toFixed(2)}
+                                        </td>
+                                      </tr>
+                                      <tr className="text-red-600">
+                                        <td
+                                          colSpan={12}
+                                          className="px-1 text-right font-semibold"
+                                        >
+                                          Grand Total
+                                        </td>
+                                        <td className="px-1 font-semibold">
+                                          ₹
+                                          {lead.itemDetails
+                                            .reduce((acc, item) => {
+                                              const taxable =
+                                                item.qty *
+                                                item.rate *
+                                                (1 - item.discount / 100);
+                                              return (
+                                                acc +
+                                                taxable *
+                                                  (1 + item.gstSlab / 100)
+                                              );
+                                            }, 0)
+                                            .toFixed(2)}
+                                        </td>
+                                      </tr>
+                                    </td>
                                   </tr>
                                 </tfoot>
                               )}

@@ -46,13 +46,13 @@ const companyData = [
 
 function LeadsInput({
   leadId,
-  data,
   leadType,
   setLeadType,
   companyDetails,
   setCompanyDetails,
+  company,
+  setCompany,
 }) {
-  const [company, setCompany] = useState(data ? data.leadDetails.name : "");
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);

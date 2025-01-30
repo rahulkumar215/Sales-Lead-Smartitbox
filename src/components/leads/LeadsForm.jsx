@@ -1,19 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { generatePDF } from "./pdf";
-import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import { FaEdit } from "react-icons/fa";
 import LeadsInput from "./LeadsInput";
 import QuotationForm from "./QuotationForm";
-
-const userInfo = {
-  uid: "UID-Infini8",
-  name: "Rahul",
-  mobile: "9319444628",
-  email: "rk83029014@gmail.com",
-  designation: "sales",
-  department: "executive",
-  username: "Infini8",
-  password: "415263",
-};
 
 const dateOptions = {
   year: "numeric",
@@ -33,18 +22,24 @@ const newItem = {
   rate: "",
   discount: "",
   gstSlab: "",
-  subtotal: "",
 };
 
 const LeadsForm = ({ leadId, onLeadSave, closeModal, data = "" }) => {
   const [showQuoteModal, setShowQuoteModal] = useState(false);
-  const [leadType, setLeadType] = useState(
-    data ? data.leadDetails.leadType : ""
-  );
-  const [items, setItems] = useState(data ? [...data.itemDetails] : [newItem]);
-  const [companyDetails, setCompanyDetails] = useState(
-    data ? data.leadDetails : ""
-  );
+  const [leadType, setLeadType] = useState("");
+  const [items, setItems] = useState([newItem]);
+  const [companyDetails, setCompanyDetails] = useState("");
+  const [company, setCompany] = useState("");
+
+  useEffect(() => {
+    if (data) {
+      setCompanyDetails(data.leadDetails);
+      setItems(data.itemDetails);
+      setLeadType(data.leadDetails.leadType);
+      setCompany(data.leadDetails.name);
+      setShowQuoteModal(data.itemDetails.length > 0);
+    }
+  }, [data]);
 
   const handleAddLeads = (e) => {
     e.preventDefault();
@@ -54,18 +49,24 @@ const LeadsForm = ({ leadId, onLeadSave, closeModal, data = "" }) => {
     );
     companyDetails["assignedTo"] = "Rahul";
     companyDetails["leadType"] = leadType;
-    companyDetails["puchedBy"] = "Kashif";
+    companyDetails["punchedBy"] = "Kashif";
     companyDetails["status"] = "Pending";
     companyDetails["leadId"] = leadId;
+    companyDetails["interState"] = false;
 
     onLeadSave(companyDetails, items);
     items.length > 0 && generatePDF(companyDetails, items);
   };
 
+  const handleClose = () => {
+    setItems([]);
+    closeModal();
+  };
+
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75 z-50">
       <div
-        className="bg-white sm:w-[90vw] w-11/12 rounded-lg max-h-[95vh] sm:max-h-[90vh] overflow-y-auto"
+        className="bg-white w-11/12 rounded-lg max-h-[95vh] sm:max-h-[90vh] overflow-y-auto"
         style={{ scrollbarWidth: "thin" }}
       >
         <form
@@ -78,12 +79,13 @@ const LeadsForm = ({ leadId, onLeadSave, closeModal, data = "" }) => {
 
           {/* Company Details */}
           <LeadsInput
-            data={data}
             leadId={leadId}
             leadType={leadType}
             setLeadType={setLeadType}
             companyDetails={companyDetails}
             setCompanyDetails={setCompanyDetails}
+            company={company}
+            setCompany={setCompany}
           />
 
           {/* Quotation Entry */}
@@ -104,7 +106,7 @@ const LeadsForm = ({ leadId, onLeadSave, closeModal, data = "" }) => {
           <div className="flex justify-end space-x-4 mt-6">
             <button
               type="button"
-              onClick={closeModal}
+              onClick={handleClose}
               className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none"
             >
               Cancel

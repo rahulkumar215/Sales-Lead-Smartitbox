@@ -13,27 +13,7 @@ import UserPage from "./components/user/UserPage";
 import CompanyPage from "./components/company/CompanyPage";
 import Layout from "./components/layout/Layout";
 import LeadsPage from "./components/leads/LeadsPage";
-
-const userInfo = {
-  uid: "UID-Infini8",
-  name: "Rahul",
-  mobile: "9319444628",
-  email: "rk83029014@gmail.com",
-  designation: "sales",
-  department: "admin",
-  username: "Infini8",
-  password: "415263",
-};
-
-// Role-based Route Guard
-const PrivateRoute = ({ allowedRoles, children }) => {
-  const userRole = userInfo.department; // Replace with actual role retrieval logic
-
-  if (!allowedRoles.includes(userRole)) {
-    return <Navigate to="/login" replace />;
-  }
-  return children || <Outlet />;
-};
+import PrivateRoute from "./PrivateRoute";
 
 function App() {
   return (

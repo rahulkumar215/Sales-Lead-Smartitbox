@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
@@ -9,6 +10,32 @@ function Login() {
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
+
+  const loginUser = async () => {
+    const url = "https://leads-management-backend.onrender.com/api/users/login";
+
+    const loginData = {
+      login: username,
+      pswd: password,
+    };
+
+    try {
+      const response = await axios.post(url, loginData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      console.log("Login Success:", response.data);
+      return response.data; // This will return the response with role and token
+    } catch (error) {
+      console.error(
+        "Login Error:",
+        error.response ? error.response.data : error.message
+      );
+      return null; // Return null in case of error
+    }
+  };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -22,12 +49,27 @@ function Login() {
     setPassword(e.target.value);
   }
 
-  const login = (e) => {
+  const login = async (e) => {
     e.preventDefault();
     if (username && password) {
-      navigate("/leads");
+      const userData = await loginUser(); // Await the login user response
+      if (userData) {
+        const { role, token } = userData;
+
+        localStorage.setItem("token", token);
+        localStorage.setItem("role", role);
+
+        if (role === "admin") {
+          navigate("/items");
+        } else if (role === "sales executive") {
+          navigate("/sales-executive");
+        } else if (role === "accounts") {
+          navigate("/accounts");
+        }
+      }
     }
   };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 px-6 py-12 sm:mt-0 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md bg-white shadow-lg rounded-xl p-8 md:p-10">
@@ -72,14 +114,6 @@ function Login() {
                 >
                   Password
                 </label>
-                {/* <div className="text-sm">
-                  <a
-                    href="#"
-                    className="font-medium text-indigo-600 hover:text-indigo-500"
-                  >
-                    Forgot password?
-                  </a>
-                </div> */}
               </div>
               <div className="mt-2 relative">
                 <input
