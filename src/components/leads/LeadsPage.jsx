@@ -21,8 +21,7 @@ const userInfo = {
   name: "Rahul",
   mobile: "9319444628",
   email: "rk83029014@gmail.com",
-  designation: "sales",
-  department: "admin",
+  role: "admin",
   username: "Infini8",
   password: "415263",
 };
@@ -196,7 +195,7 @@ function LeadsPage() {
 
   useEffect(() => {
     setCombLeadDetails(
-      userInfo.department === "admin"
+      userInfo.role === "admin"
         ? dummyLeads
         : dummyLeads.filter(
             (lead) => lead.leadDetails.assignedToId === userInfo.uid
@@ -321,7 +320,7 @@ function LeadsPage() {
                       >
                         <FaEdit size={20} />
                       </button>
-                      {userInfo.department === "admin" && (
+                      {userInfo.role === "admin" && (
                         <button
                           onClick={(e) =>
                             handleDelete(e, lead.leadDetails.leadId)
