@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom"; // Used to render the current page co
 import Footer from "../footer/Footer";
 
 const Layout = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const userInfo = {
     uid: "UID-Infini8",
     name: "Rahul",

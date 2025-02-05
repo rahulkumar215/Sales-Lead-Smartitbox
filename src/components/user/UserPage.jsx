@@ -5,54 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { FaEdit, FaPlus, FaTrashAlt } from "react-icons/fa";
 import AddUserModal from "./AddUserModal";
 import axios from "axios";
-
-const dummyUsers = [
-  {
-    uid: "user-1",
-    name: "Alice Johnson",
-    mobile: "9876543210",
-    email: "alice.johnson@example.com",
-    role: "admin",
-    username: "alice.johnson",
-    password: "Pass@1234",
-  },
-  {
-    uid: "user-2",
-    name: "Bob Smith",
-    mobile: "9123456789",
-    email: "bob.smith@example.com",
-    role: "executive",
-    username: "bob.smith",
-    password: "Pass@5678",
-  },
-  {
-    uid: "user-3",
-    name: "Charlie Davis",
-    mobile: "9988776655",
-    email: "charlie.davis@example.com",
-    role: "executive",
-    username: "charlie.davis",
-    password: "Pass@9012",
-  },
-  {
-    uid: "user-4",
-    name: "Diana Miller",
-    mobile: "8888888888",
-    email: "diana.miller@example.com",
-    role: "executive",
-    username: "diana.miller",
-    password: "Pass@3456",
-  },
-  {
-    uid: "user-5",
-    name: "Ethan Brown",
-    mobile: "7777777777",
-    email: "ethan.brown@example.com",
-    role: "executive",
-    username: "ethan.brown",
-    password: "Pass@7890",
-  },
-];
+import LoadingScreen from "../universal/LoadingScreen";
 
 const UserPage = () => {
   const [users, setUsers] = useState([]);
@@ -68,8 +21,6 @@ const UserPage = () => {
     pswd: "",
   });
 
-  const token = localStorage.getItem("token");
-  console.log("token", token);
   const registerUser = async () => {
     const url =
       "https://leads-management-backend.onrender.com/api/users/register";
@@ -157,11 +108,9 @@ const UserPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  console.log(`In user page`);
-
   useEffect(() => {
     const fetchUsers = async () => {
-      // const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token");
 
       console.log(token);
 
@@ -197,7 +146,6 @@ const UserPage = () => {
     fetchUsers();
   }, []);
 
-  if (loading) return <p>Loading users...</p>;
   if (error) return <p>{error}</p>;
 
   return (
@@ -253,7 +201,13 @@ const UserPage = () => {
             </tr>
           </thead>
           <tbody>
-            {displayUsers?.length === 0 ? (
+            {loading ? (
+              <tr>
+                <td colSpan={6} className=" text-black text-center py-2">
+                  Loading...
+                </td>
+              </tr>
+            ) : displayUsers?.length === 0 ? (
               <tr>
                 <td colSpan="8" className="px-6 py-4 text-center text-gray-500">
                   No users found
