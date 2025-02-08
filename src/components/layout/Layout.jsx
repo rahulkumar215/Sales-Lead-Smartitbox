@@ -6,16 +6,6 @@ import Footer from "../footer/Footer";
 
 const Layout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const userInfo = {
-    uid: "UID-Infini8",
-    name: "Rahul",
-    mobile: "9319444628",
-    email: "rk83029014@gmail.com",
-    designation: "sales",
-    department: "executive",
-    username: "Infini8",
-    password: "415263",
-  };
 
   // Function to toggle sidebar visibility
   const toggleSidebar = () => {

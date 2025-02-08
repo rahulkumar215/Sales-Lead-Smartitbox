@@ -1,20 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  FaEdit,
-  FaHistory,
-  FaPhoneAlt,
-  FaPlus,
-  FaTrashAlt,
-} from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import ReactPaginate from "react-paginate";
 import LeadsForm from "./LeadsForm";
-import PopOver from "./PopOver";
-import { IoMail } from "react-icons/io5";
-import { CiEdit } from "react-icons/ci";
 import TakeFollowUpForm from "./TakeFollowUpForm";
 import FollowUpHistory from "./FollowUpHistory";
-import PivotTable from "./PivotTable";
+import LeadTable from "./LeadTable";
+import LeadExpandableTable from "./LeadExpandableTable";
 
 const userInfo = {
   uid: "UID-Infini8",
@@ -103,8 +95,6 @@ function LeadsPage() {
   const handlePageChange = (data) => {
     setCurrentPage(data.selected);
   };
-
-  console.log(JSON.stringify(combLeadDetails));
 
   // Slice the items based on the current page
   const paginatedLeads = filteredLeads.slice(
@@ -227,7 +217,7 @@ function LeadsPage() {
         />
       )}
 
-      {/* Take Follow Up Modal Implementation */}
+      {/* Follow Up History Modal Implementation */}
       {isFollowUpHistoryModalOpen && (
         <FollowUpHistory
           data={followUps.filter(
@@ -237,7 +227,7 @@ function LeadsPage() {
         />
       )}
 
-      {/* Header Section */}
+      {/* Search bar and Add Lead button Section */}
       <div className="flex justify-between items-center mb-3">
         <input
           type="text"
@@ -262,32 +252,33 @@ function LeadsPage() {
         <table className="min-w-full table-auto">
           <thead className="bg-gray-100 text-gray-600">
             <tr className="bg-blue-900 text-white">
-              <th className="px-6 text-left font-medium text-sm">Actions</th>
-              <th className="px-12 text-left font-medium text-sm">Timestamp</th>
-              <th className="px-6 text-left font-medium text-sm">Lead ID</th>
-              <th className="px-6 text-left font-medium text-sm">Type</th>
-              <th className="px-6 text-left font-medium text-sm">Company</th>
-              <th className="px-6 text-left font-medium text-sm">Source</th>
-              <th className="px-6 text-left font-medium text-sm">
-                Contact Person
-              </th>
-              <th className="px-6 text-left font-medium text-sm">Phone</th>
-              <th className="px-6 text-left font-medium text-sm">Email</th>
-              <th className="px-6 text-left font-medium text-sm">
-                Designation
-              </th>
-              <th className="px-6 text-left font-medium text-sm">
-                Enquriy Type
-              </th>
-              <th className="px-6 text-left font-medium text-sm">
-                Assigned to
-              </th>
-              <th className="px-6 text-left font-medium text-sm">Remarks</th>
-              <th className="px-6 text-left font-medium text-sm">
-                Followup Date
-              </th>
-              <th className="px-6 text-left font-medium text-sm">Punched By</th>
-              <th className="px-6 text-left font-medium text-sm">Status</th>
+              {[
+                "Actions",
+                "Timestamp",
+                "Lead ID",
+                "Type",
+                "Company",
+                "Source",
+                "Contact Person",
+                "Phone",
+                "Email",
+                "Designation",
+                "Enquiry Type",
+                "Assigned to",
+                "Remarks",
+                "Followup Date",
+                "Punched By",
+                "Status",
+              ].map((header, index) => (
+                <th
+                  key={index}
+                  className={`px-6 text-left font-medium text-sm ${
+                    header === "Timestamp" ? "!px-12" : ""
+                  }`}
+                >
+                  {header}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
@@ -303,462 +294,24 @@ function LeadsPage() {
             ) : (
               paginatedLeads.map((lead, index) => (
                 <React.Fragment key={index}>
-                  <tr
-                    onClick={() => toggleExpandRow(index)}
-                    className={`hover:bg-gray-50 cursor-pointer transition-all duration-300 ease-in-out  ${
-                      expandedRow === index
-                        ? "bg-gray-300 hover:!bg-gray-400"
-                        : ""
-                    }`}
-                  >
-                    <td className="text-center">
-                      <button
-                        onClick={(e) =>
-                          handleEditLead(e, lead.leadDetails.leadId)
-                        }
-                        className="text-indigo-600 mr-2 hover:text-indigo-800"
-                      >
-                        <FaEdit size={20} />
-                      </button>
-                      {userInfo.role === "admin" && (
-                        <button
-                          onClick={(e) =>
-                            handleDelete(e, lead.leadDetails.leadId)
-                          }
-                          className="text-red-600 hover:text-red-800"
-                        >
-                          <FaTrashAlt size={20} />
-                        </button>
-                      )}
-                    </td>
-                    <td className="py-2">{lead.leadDetails.timestamp}</td>
-                    <td className="text-red-800 font-bold">
-                      {lead.leadDetails.leadId}
-                    </td>
-                    <td>
-                      <span
-                        className={`px-2 py-1 rounded-md ${
-                          lead.leadDetails.leadType === "NBD"
-                            ? "bg-red-200 border border-red-400"
-                            : "bg-green-200 border border-green-400"
-                        }`}
-                      >
-                        {lead.leadDetails.leadType}
-                      </span>
-                    </td>
-                    <td>{lead.leadDetails.name}</td>
-                    <td>{lead.leadDetails.leadSource}</td>
-                    <td>{lead.leadDetails.contactPerson}</td>
-                    <PopOver
-                      value={lead.leadDetails.number}
-                      link={`tel:${lead.leadDetails.number}`}
-                    >
-                      <FaPhoneAlt size={20} className="text-green-700" />
-                    </PopOver>
-                    <PopOver
-                      value={lead.leadDetails.email}
-                      link={`mailto:${lead.leadDetails.email}`}
-                    >
-                      <IoMail size={20} className="text-red-700" />
-                    </PopOver>
-                    <td>{lead.leadDetails.designation}</td>
-                    <td>
-                      <span
-                        className={`px-2 py-1 rounded-md ${
-                          lead.leadDetails.enquiryType === "Hot" &&
-                          "bg-red-200 border border-red-400"
-                        } ${
-                          lead.leadDetails.enquiryType === "Cold" &&
-                          " bg-blue-200 border border-blue-400"
-                        } ${
-                          lead.leadDetails.enquiryType === "Warm" &&
-                          "bg-yellow-200  border border-yellow-400"
-                        }`}
-                      >
-                        {lead.leadDetails.enquiryType}
-                      </span>
-                    </td>
-                    <td>{lead.leadDetails.assignedTo}</td>
-                    <td>{lead.leadDetails.remarks}</td>
-                    <td>{lead.leadDetails.followupDate}</td>
-                    <td>{lead.leadDetails.punchedBy}</td>
-                    <td>
-                      <span
-                        className={`px-1 py-0.5 rounded-md ${
-                          lead.leadDetails.status === "Won"
-                            ? "bg-green-200 border border-green-400"
-                            : lead.leadDetails.status === "Lost"
-                            ? "bg-red-200 border border-red-400"
-                            : "bg-yellow-200 border border-yellow-400"
-                        }`}
-                      >
-                        {lead.leadDetails.status}
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colSpan="16">
-                      <div
-                        ref={(el) => (contentRefs.current[index] = el)}
-                        className={`overflow-hidden overflow-x-auto transition-[max-height] duration-500 ease-in-out ${
-                          expandedRow === index ? "max-h-screen" : "max-h-0"
-                        }`}
-                        style={{
-                          maxHeight:
-                            expandedRow === index
-                              ? contentRefs.current[index]?.scrollHeight + "px"
-                              : "0px",
-                        }}
-                      >
-                        <div className="p-4 bg-slate-200 shadow-md rounded-lg flex">
-                          {/* Lead Details Section */}
-                          <div className="w-3/12 pr-4">
-                            <h3 className="text-lg text-indigo-700 font-semibold mb-3">
-                              Lead Details
-                            </h3>
-                            <div className="grid grid-cols-1 gap-2 text-sm">
-                              <p>
-                                <strong>Address:</strong>{" "}
-                                {lead.leadDetails.address}
-                              </p>
-                              <p>
-                                <strong>Country:</strong>{" "}
-                                {lead.leadDetails.country}
-                              </p>
-                              <p>
-                                <strong>State:</strong> {lead.leadDetails.state}
-                              </p>
-                              <p>
-                                <strong>City:</strong> {lead.leadDetails.city}
-                              </p>
-                              <p>
-                                <strong>Industry Type:</strong>{" "}
-                                {lead.leadDetails.industryType}
-                              </p>
-                              <p>
-                                <strong>GST No.:</strong> {lead.leadDetails.gst}
-                              </p>
-                              <div className="grid grid-cols-2 gap-2 mt-2">
-                                <button
-                                  className="bg-teal-600 flex gap-2 justify-center items-center hover:bg-teal-700 py-2 px-4 rounded-md text-white "
-                                  onClick={() =>
-                                    showFollowUpHistory(lead.leadDetails.leadId)
-                                  }
-                                >
-                                  <FaHistory size={20} />
-                                  Follow Up History
-                                </button>
-                                <button
-                                  className="bg-red-600 flex gap-2 justify-center items-center hover:bg-red-700 py-2 px-4 rounded-md text-white"
-                                  onClick={() => {
-                                    setIsTakeFollowUpModalOpen(true);
-                                    setLeadFollowUpHistory(
-                                      lead.leadDetails.leadId
-                                    );
-                                  }}
-                                >
-                                  <FaEdit size={20} />
-                                  Take Follow Up
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Item Details Section */}
-                          <div className="w-9/12">
-                            <h4 className="text-lg text-indigo-600 font-medium mb-3">
-                              Item Details
-                            </h4>
-                            <table className="min-w-full table-auto border-collapse border border-gray-300 rounded-lg overflow-hidden">
-                              <thead className="bg-blue-200">
-                                <tr>
-                                  <th className="px-2 py-1 border border-gray-300 text-left text-sm font-medium text-gray-600">
-                                    Category
-                                  </th>
-                                  <th className="px-2 py-1 border border-gray-300 text-left text-sm font-medium text-gray-600">
-                                    Name
-                                  </th>
-                                  <th className="px-2 py-1 border border-gray-300 text-left text-sm font-medium text-gray-600">
-                                    Id
-                                  </th>
-                                  <th className="px-2 py-1 border border-gray-300 text-left text-sm font-medium text-gray-600">
-                                    Qty.
-                                  </th>
-                                  <th className="px-2 py-1 border border-gray-300 text-left text-sm font-medium text-gray-600">
-                                    Rate
-                                  </th>
-                                  <th className="px-2 py-1 border border-gray-300 text-left text-sm font-medium text-gray-600">
-                                    Subtotal
-                                  </th>
-                                  <th className="px-2 py-1 border border-gray-300 text-left text-sm font-medium text-gray-600">
-                                    Discount
-                                  </th>
-                                  <th className="px-2 py-1 border border-gray-300 text-left text-sm font-medium text-gray-600">
-                                    Taxable Amount
-                                  </th>
-                                  <th className="px-2 py-1 border border-gray-300 text-left text-sm font-medium text-gray-600">
-                                    GST Slab
-                                  </th>
-                                  <th className="px-2 py-1 border border-gray-300 text-left text-sm font-medium text-gray-600">
-                                    IGST
-                                  </th>
-                                  <th className="px-2 py-1 border border-gray-300 text-left text-sm font-medium text-gray-600">
-                                    SGST
-                                  </th>
-                                  <th className="px-2 py-1 border border-gray-300 text-left text-sm font-medium text-gray-600">
-                                    IGST
-                                  </th>
-                                  <th className="px-2 py-1 border border-gray-300 text-left text-sm font-medium text-gray-600">
-                                    Total
-                                  </th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {lead.itemDetails.length === 0 ? (
-                                  <tr className=" text-center">
-                                    <td colSpan={16}>
-                                      Items are not added for this lead.
-                                    </td>
-                                  </tr>
-                                ) : (
-                                  lead.itemDetails.map((item, i) => (
-                                    <tr
-                                      key={i}
-                                      className={
-                                        i % 2 === 0 ? "bg-gray-100" : "bg-white"
-                                      }
-                                    >
-                                      <td className="px-2 py-1 border border-gray-300 text-sm">
-                                        {item.category}
-                                      </td>
-                                      <td className="px-2 py-1 border border-gray-300 text-sm">
-                                        {item.name}
-                                      </td>
-                                      <td className="px-2 py-1 border border-gray-300 text-sm">
-                                        {item.id}
-                                      </td>
-                                      <td className="px-2 py-1 border border-gray-300 text-sm">
-                                        {parseFloat(item.qty).toFixed(2)}
-                                      </td>
-                                      <td className="px-2 py-1 border border-gray-300 text-sm">
-                                        ₹{parseFloat(item.rate).toFixed(2)}
-                                      </td>
-                                      <td className="px-2 py-1 border border-gray-300 text-sm">
-                                        ₹
-                                        {parseFloat(
-                                          item.qty * item.rate
-                                        ).toFixed(2)}
-                                      </td>
-                                      <td className="px-2 py-1 border border-gray-300 text-sm">
-                                        {item.discount}%
-                                      </td>
-                                      <td className="px-2 py-1 border border-gray-300 text-sm">
-                                        ₹
-                                        {parseFloat(
-                                          item.qty *
-                                            item.rate *
-                                            (1 - item.discount / 100)
-                                        ).toFixed(2)}
-                                      </td>
-                                      <td className="px-2 py-1 border border-gray-300 text-sm">
-                                        {item.gstSlab}%
-                                      </td>
-                                      <td className="px-2 py-1 border border-gray-300 text-sm">
-                                        ₹
-                                        {lead.leadDetails.interState
-                                          ? parseFloat(
-                                              item.qty *
-                                                item.rate *
-                                                (1 - item.discount / 100) *
-                                                (item.gstSlab / 100)
-                                            ).toFixed(2)
-                                          : "0.00"}
-                                      </td>
-                                      <td className="px-2 py-1 border border-gray-300 text-sm">
-                                        ₹
-                                        {lead.leadDetails.interState
-                                          ? "0.00"
-                                          : parseFloat(
-                                              item.qty *
-                                                item.rate *
-                                                (1 - item.discount / 100) *
-                                                (item.gstSlab / 200)
-                                            ).toFixed(2)}
-                                      </td>
-                                      <td className="px-2 py-1 border border-gray-300 text-sm">
-                                        ₹
-                                        {lead.leadDetails.interState
-                                          ? "0.00"
-                                          : parseFloat(
-                                              item.qty *
-                                                item.rate *
-                                                (1 - item.discount / 100) *
-                                                (item.gstSlab / 200)
-                                            ).toFixed(2)}
-                                      </td>
-
-                                      <td className="px-2 py-1 border border-gray-300 text-sm">
-                                        ₹
-                                        {parseFloat(
-                                          item.qty *
-                                            item.rate *
-                                            (1 - item.discount / 100) *
-                                            (1 +
-                                              (lead.leadDetails.interState
-                                                ? item.gstSlab / 100
-                                                : item.gstSlab / 100))
-                                        ).toFixed(2)}
-                                      </td>
-                                    </tr>
-                                  ))
-                                )}
-                              </tbody>
-                              {lead.itemDetails.length > 0 && (
-                                <tfoot className="">
-                                  <tr>
-                                    <td colSpan={12}>
-                                      <PivotTable
-                                        items={lead.itemDetails}
-                                        isInterState={
-                                          lead.leadDetails.interState
-                                        }
-                                        className="max-w-[30rem] sm:w-fit border border-gray-400"
-                                      />
-                                    </td>
-                                    <td>
-                                      <tr className="text-red-600">
-                                        <td
-                                          colSpan={12}
-                                          className="px-1 text-right font-semibold"
-                                        >
-                                          Total Amount
-                                        </td>
-                                        <td className="px-1 font-semibold">
-                                          ₹
-                                          {lead.itemDetails
-                                            .reduce(
-                                              (acc, item) =>
-                                                acc +
-                                                item.qty *
-                                                  item.rate *
-                                                  (1 - item.discount / 100),
-                                              0
-                                            )
-                                            .toFixed(2)}
-                                        </td>
-                                      </tr>
-                                      <tr className="text-red-600">
-                                        <td
-                                          colSpan={12}
-                                          className="px-1 text-right font-semibold"
-                                        >
-                                          IGST
-                                        </td>
-                                        <td className="px-1 font-semibold">
-                                          ₹
-                                          {lead.leadDetails.interState
-                                            ? lead.itemDetails
-                                                .reduce((acc, item) => {
-                                                  const taxable =
-                                                    item.qty *
-                                                    item.rate *
-                                                    (1 - item.discount / 100);
-                                                  return (
-                                                    acc +
-                                                    (taxable * item.gstSlab) /
-                                                      100
-                                                  );
-                                                }, 0)
-                                                .toFixed(2)
-                                            : "0.00"}
-                                        </td>
-                                      </tr>
-                                      <tr className="text-red-600">
-                                        <td
-                                          colSpan={12}
-                                          className="px-1 text-right font-semibold"
-                                        >
-                                          SGST
-                                        </td>
-                                        <td className="px-1 font-semibold">
-                                          ₹
-                                          {lead.leadDetails.interState
-                                            ? "0.00"
-                                            : lead.itemDetails
-                                                .reduce((acc, item) => {
-                                                  const taxable =
-                                                    item.qty *
-                                                    item.rate *
-                                                    (1 - item.discount / 100);
-                                                  return (
-                                                    acc +
-                                                    (taxable * item.gstSlab) /
-                                                      200
-                                                  );
-                                                }, 0)
-                                                .toFixed(2)}
-                                        </td>
-                                      </tr>
-                                      <tr className="text-red-600">
-                                        <td
-                                          colSpan={12}
-                                          className="px-1 text-right font-semibold"
-                                        >
-                                          CGST
-                                        </td>
-                                        <td className="px-1 font-semibold">
-                                          ₹
-                                          {lead.leadDetails.interState
-                                            ? "0.00"
-                                            : lead.itemDetails
-                                                .reduce((acc, item) => {
-                                                  const taxable =
-                                                    item.qty *
-                                                    item.rate *
-                                                    (1 - item.discount / 100);
-                                                  return (
-                                                    acc +
-                                                    (taxable * item.gstSlab) /
-                                                      200
-                                                  );
-                                                }, 0)
-                                                .toFixed(2)}
-                                        </td>
-                                      </tr>
-                                      <tr className="text-red-600">
-                                        <td
-                                          colSpan={12}
-                                          className="px-1 text-right font-semibold"
-                                        >
-                                          Grand Total
-                                        </td>
-                                        <td className="px-1 font-semibold">
-                                          ₹
-                                          {lead.itemDetails
-                                            .reduce((acc, item) => {
-                                              const taxable =
-                                                item.qty *
-                                                item.rate *
-                                                (1 - item.discount / 100);
-                                              return (
-                                                acc +
-                                                taxable *
-                                                  (1 + item.gstSlab / 100)
-                                              );
-                                            }, 0)
-                                            .toFixed(2)}
-                                        </td>
-                                      </tr>
-                                    </td>
-                                  </tr>
-                                </tfoot>
-                              )}
-                            </table>
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
+                  <LeadTable
+                    toggleExpandRow={toggleExpandRow}
+                    index={index}
+                    lead={lead}
+                    expandedRow={expandedRow}
+                    handleEditLead={handleEditLead}
+                    handleDelete={handleDelete}
+                    userInfo={userInfo}
+                  />
+                  <LeadExpandableTable
+                    contentRefs={contentRefs}
+                    index={index}
+                    expandedRow={expandedRow}
+                    lead={lead}
+                    showFollowUpHistory={showFollowUpHistory}
+                    setIsTakeFollowUpModalOpen={setIsTakeFollowUpModalOpen}
+                    setLeadFollowUpHistory={setLeadFollowUpHistory}
+                  />
                 </React.Fragment>
               ))
             )}

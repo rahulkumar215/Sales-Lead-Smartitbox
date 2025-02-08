@@ -36,16 +36,13 @@ const AddUserModal = ({
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75 z-50">
       <div
-        className="bg-white p-6 sm:w-1/2 w-11/12 rounded-lg max-h-[95vh] sm:max-h-[90vh] overflow-y-auto"
+        className="bg-white p-6 sm:w-[25rem] w-11/12 rounded-lg max-h-[95vh] sm:max-h-[90vh] overflow-y-auto"
         style={{ scrollbarWidth: "thin" }}
       >
         <h2 className="text-xl font-semibold text-indigo-600 mb-3">
           {newUser._id ? "Edit User" : "Add User"}
         </h2>
-        <form
-          onSubmit={handleSubmit}
-          className="grid grid-cols-1 sm:grid-cols-2 gap-3"
-        >
+        <form onSubmit={handleSubmit} className="grid grid-cols-1  gap-3">
           {/* Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
@@ -158,19 +155,19 @@ const AddUserModal = ({
           </div>
 
           {/* Buttons */}
-          <div className="flex flex-row sm:justify-between mt-3 gap-4 col-span-full">
-            <button
-              type="submit"
-              className="px-3 py-1 w-full sm:w-fit bg-indigo-600 text-white rounded-[5px] hover:bg-indigo-700 transition duration-200"
-            >
-              {newUser.uid ? "Update" : "Add"} User
-            </button>
+          <div className="flex flex-row sm:justify-end mt-3 gap-2 col-span-full">
             <button
               type="button"
               className="px-3 py-1 w-full sm:w-fit bg-gray-400 text-white rounded-[5px] hover:bg-gray-500 transition duration-200"
               onClick={() => setIsModalOpen(false)}
             >
               Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-3 py-1 w-full sm:w-fit bg-indigo-600 text-white rounded-[5px] hover:bg-indigo-700 transition duration-200"
+            >
+              {newUser.uid ? "Update" : "Add"} User
             </button>
           </div>
         </form>

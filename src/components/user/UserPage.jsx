@@ -6,6 +6,7 @@ import { FaEdit, FaPlus, FaTrashAlt } from "react-icons/fa";
 import AddUserModal from "./AddUserModal";
 import axios from "axios";
 import LoadingScreen from "../universal/LoadingScreen";
+import { Bars } from "react-loader-spinner";
 
 const UserPage = () => {
   const [users, setUsers] = useState([]);
@@ -106,7 +107,6 @@ const UserPage = () => {
   };
 
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -115,7 +115,7 @@ const UserPage = () => {
       console.log(token);
 
       if (!token) {
-        setError("No token found. Please log in.");
+        toast.error("No token found. Please log in.");
         setLoading(false);
         return;
       }
@@ -138,7 +138,7 @@ const UserPage = () => {
           "Error fetching users:",
           err.response ? err.response.data : err.message
         );
-        setError("Error fetching users.");
+        toast.error("Error fetching users!");
         setLoading(false);
       }
     };
@@ -146,10 +146,8 @@ const UserPage = () => {
     fetchUsers();
   }, []);
 
-  if (error) return <p>{error}</p>;
-
   return (
-    <div className="min-h-screen bg-white p-3">
+    <div className="min-h-screen bg-white p-4">
       <ToastContainer />
 
       {/* Add User Modal */}
@@ -164,15 +162,15 @@ const UserPage = () => {
       )}
 
       {/* Header Section */}
-      <div className="flex justify-between items-center mb-3">
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-4">
         <input
           type="text"
           placeholder="Search by anything..."
           onChange={handleSearch}
-          className="p-1 border border-gray-300 bg-gray-100 rounded-md w-1/3 focus:outline-none focus:ring-2 focus:ring-indigo-600 placeholder:text-black"
+          className="p-1 border border-gray-300 bg-gray-100 rounded-md w-full sm:w-1/3 focus:outline-none focus:ring-2 focus:ring-indigo-600 placeholder:text-black"
         />
         <button
-          className="px-6 py-2 flex items-center gap-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-200"
+          className="px-6 py-2 flex items-center justify-center gap-2 bg-indigo-600 w-full sm:w-fit  text-white rounded-md hover:bg-indigo-700 transition duration-200"
           onClick={() => setIsModalOpen(true)}
         >
           <FaPlus />
@@ -188,45 +186,69 @@ const UserPage = () => {
         <table className="min-w-full table-auto overflow-x-auto">
           <thead className="bg-gray-100 text-gray-600">
             <tr className="bg-blue-900 text-white">
-              {["Name", "Mobile", "Email", "Role", "Username", "Actions"].map(
-                (header) => (
-                  <th
-                    key={header}
-                    className="px-6 py-3 text-left font-medium text-sm"
-                  >
-                    {header}
-                  </th>
-                )
-              )}
+              {[
+                "S. No.",
+                "Name",
+                "Mobile",
+                "Email",
+                "Role",
+                "Username",
+                "Actions",
+              ].map((header) => (
+                <th
+                  key={header}
+                  className="px-2 py-1 text-left font-medium tracking-wide text-sm"
+                >
+                  {header}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={6} className=" text-black text-center py-2">
-                  Loading...
+                <td colSpan={7} className=" text-black text-center py-2">
+                  <div className="w-full flex items-center justify-center">
+                    <Bars
+                      height="25"
+                      width="25"
+                      color="#6b7280"
+                      ariaLabel="bars-loading"
+                      wrapperStyle={{}}
+                      wrapperClass=""
+                      visible={true}
+                    />
+                  </div>
                 </td>
               </tr>
             ) : displayUsers?.length === 0 ? (
               <tr>
-                <td colSpan="8" className="px-6 py-4 text-center text-gray-500">
+                <td colSpan="7" className="px-6 py-4 text-center text-gray-500">
                   No users found
                 </td>
               </tr>
             ) : (
-              displayUsers?.map((user) => (
+              displayUsers?.map((user, i) => (
                 <tr
                   key={user._id}
                   className="hover:bg-gray-50 border border-t-gray-300  "
                 >
-                  {["name", "mobileNo", "email", "role", "username"].map(
-                    (field) => (
-                      <td key={field} className="px-3 py-2 text-sm">
-                        {user[field]}
-                      </td>
-                    )
-                  )}
-                  <td className="px-3 py-2 flex gap-2 items-center justify-center">
+                  {[
+                    "s.no.",
+                    "name",
+                    "mobileNo",
+                    "email",
+                    "role",
+                    "username",
+                  ].map((field) => (
+                    <td
+                      key={field}
+                      className="px-2 border border-gray-100 py-1 text-sm"
+                    >
+                      {field === "s.no." ? i + 1 : user[field]}
+                    </td>
+                  ))}
+                  <td className="px-2 py-1 flex gap-2 items-center justify-start">
                     <button
                       onClick={() => handleEditUser(user.uid)}
                       className="text-indigo-600 hover:text-indigo-800"

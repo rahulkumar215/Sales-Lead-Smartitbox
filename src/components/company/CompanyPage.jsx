@@ -87,19 +87,19 @@ const CompanyPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white p-6">
+    <div className="min-h-screen bg-white p-4">
       <ToastContainer />
 
       {/* Header Section */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4">
         <input
           type="text"
           placeholder="Search companies"
           onChange={handleSearch}
-          className="p-1 border border-gray-300 bg-gray-100 rounded-md w-1/3 focus:outline-none focus:ring-2 focus:ring-indigo-600 placeholder:text-black"
+          className="p-1 border border-gray-300 bg-gray-100 rounded-md w-full sm:w-1/3 focus:outline-none focus:ring-2 focus:ring-indigo-600 placeholder:text-black"
         />
         <button
-          className="px-6 py-2 flex items-center gap-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-200"
+          className="px-6 py-2 flex justify-center items-center gap-2 bg-indigo-600 text-white w-full sm:w-fit rounded-md hover:bg-indigo-700 transition duration-200"
           onClick={() => setIsModalOpen(true)}
         >
           <FaPlus />

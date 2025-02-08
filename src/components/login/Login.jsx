@@ -2,16 +2,19 @@ import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Bars } from "react-loader-spinner";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
 
   const loginUser = async () => {
+    setIsLoading(true);
     const url = "https://leads-management-backend.onrender.com/api/users/login";
 
     const loginData = {
@@ -34,6 +37,8 @@ function Login() {
         error.response ? error.response.data : error.message
       );
       return null; // Return null in case of error
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -54,13 +59,14 @@ function Login() {
     if (username && password) {
       const userData = await loginUser(); // Await the login user response
       if (userData) {
-        const { role, token } = userData;
+        const { role, token, id } = userData;
 
         localStorage.setItem("token", token);
         localStorage.setItem("role", role);
+        localStorage.setItem("uid", id);
 
         if (role === "admin") {
-          navigate("/items");
+          navigate("/users");
         } else if (role === "sales executive") {
           navigate("/sales-executive");
         } else if (role === "accounts") {
@@ -141,9 +147,24 @@ function Login() {
             <div>
               <button
                 type="submit"
-                className="w-full py-2 px-4 bg-indigo-600 text-white text-lg font-semibold rounded-md hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-200"
+                disabled={isLoading}
+                className={`w-full py-2 px-4 bg-indigo-600 flex items-center justify-center text-white text-lg font-semibold rounded-md hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-200 ${
+                  isLoading && "!bg-indigo-400 cursor-not-allowed"
+                }`}
               >
-                Log In
+                {isLoading ? (
+                  <Bars
+                    height="25"
+                    width="25"
+                    color="#ffffff"
+                    ariaLabel="bars-loading"
+                    wrapperStyle={{}}
+                    wrapperClass=""
+                    visible={true}
+                  />
+                ) : (
+                  "Log In"
+                )}
               </button>
             </div>
           </form>

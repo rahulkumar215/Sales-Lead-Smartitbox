@@ -128,7 +128,7 @@ function ItemsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white p-3">
+    <div className="min-h-screen bg-white p-4">
       <ToastContainer />
 
       {/* Modal Implementation */}
@@ -149,17 +149,17 @@ function ItemsPage() {
       )}
 
       {/* Header Section */}
-      <div className="flex justify-between items-center mb-3">
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-4">
         <input
           type="text"
           placeholder="Search items..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="p-1 border border-gray-300 bg-gray-100 rounded-md w-1/3 focus:outline-none focus:ring-2 focus:ring-indigo-600 placeholder:text-black"
+          className="p-1 border border-gray-300 bg-gray-100 rounded-md w-full sm:w-1/3 focus:outline-none focus:ring-2 focus:ring-indigo-600 placeholder:text-black"
         />
         <button
           onClick={() => setIsModalOpen(true)}
-          className="px-6 py-2 flex items-center gap-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-200"
+          className="px-6 py-2 flex justify-center items-center gap-2 w-full sm:w-fit bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-200"
         >
           <FaPlus />
           Add Items
@@ -195,7 +195,7 @@ function ItemsPage() {
             {paginatedItems.length === 0 ? (
               <tr>
                 <td
-                  colSpan="5"
+                  colSpan="7"
                   className="px-6 w-full py-4 text-center text-gray-500"
                 >
                   No items found
@@ -234,9 +234,7 @@ function ItemsPage() {
         </table>
       </div>
 
-      {/* Pagination (Optional if needed) */}
       {/* Pagination */}
-
       <div className="flex justify-between items-center mt-6">
         <p className="text-sm text-gray-800 font-semibold">
           {filteredItems.length} entries found
